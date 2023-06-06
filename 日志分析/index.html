@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>日志分析 - Jason Zhai的博客</title><meta name="Description" content="个人杂学杂记"><meta property="og:title" content="日志分析" />
+<meta property="og:description" content="个人杂学杂记" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zjczdzs.github.io/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" /><meta property="og:image" content="https://zjczdzs.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-06-06T17:48:02+08:00" />
+<meta property="article:modified_time" content="2023-06-06T17:48:02+08:00" /><meta property="og:site_name" content="LoveIt" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://zjczdzs.github.io/logo.png"/>
+
+<meta name="twitter:title" content="日志分析"/>
+<meta name="twitter:description" content="个人杂学杂记"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://zjczdzs.github.io/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" /><link rel="prev" href="https://zjczdzs.github.io/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" /><link rel="next" href="https://zjczdzs.github.io/go%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "日志分析",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/zjczdzs.github.io\/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90\/"
+        },"image": ["https:\/\/zjczdzs.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "信息安全","wordcount":  6586 ,
+        "url": "https:\/\/zjczdzs.github.io\/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90\/","datePublished": "2023-06-06T17:48:02+08:00","dateModified": "2023-06-06T17:48:02+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": "https:\/\/zjczdzs.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "Jason Zhai"
+            },"description": "个人杂学杂记"
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Jason Zhai的博客"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>LoveIt</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/categories/documentation/"> 文档 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/dillonzq/LoveIt" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a><a href="javascript:void(0);" class="menu-item language" title="选择语言">
+                    <i class="fa fa-globe" aria-hidden="true"></i>                      
+                    <select class="language-select" id="language-select-desktop" onchange="location = this.value;"><option value="/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" selected>简体中文</option></select>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Jason Zhai的博客"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>LoveIt</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/categories/documentation/" title="">文档</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/dillonzq/LoveIt" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a><a href="javascript:void(0);" class="menu-item" title="选择语言">
+                    <i class="fa fa-globe fa-fw" aria-hidden="true"></i>
+                    <select class="language-select" onchange="location = this.value;"><option value="/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" selected>简体中文</option></select>
+                </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">日志分析</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Jason Zhai</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E6%9D%82%E9%A1%B9/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>杂项</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-06-06">2023-06-06</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 6586 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 14 分钟&nbsp;<span id="/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" class="leancloud_visitors" data-flag-title="日志分析">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#11系统日志分析">1.1系统日志分析</a>
+      <ul>
+        <li><a href="#111window系统日志与分析方法">1.1.1window系统日志与分析方法</a></li>
+        <li><a href="#112linux-系统日志与分析方法">1.1.2linux 系统日志与分析方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-web日志分析">1.2 web日志分析</a>
+      <ul>
+        <li><a href="#iis-日志分析方法">iis 日志分析方法</a></li>
+        <li><a href="#apache日志分析">apache日志分析</a>
+          <ul>
+            <li><a href="#access_log"><strong>access_log</strong></a></li>
+            <li><a href="#error_log"><strong>error_log</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="#nginx日志分析">nginx日志分析</a></li>
+        <li><a href="#tomcat-日志分析">tomcat 日志分析</a></li>
+        <li><a href="#主流日志分析工具使用">主流日志分析工具使用</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>@[toc]</p>
+<h1 id="1流量与日志分析">1.流量与日志分析</h1>
+<p>日志，是作为记录系统与服务最直接有效的方法。在日志中，可 以发现访问记录以及发现攻击线索。日志分析也是最常用的分析安全 事件所采用的途径。系统日志和 web 日志分别记录了不同内容，为分析 攻击提供了有效证据。网络流量分析，也是作为排查安全事件所能获 得的有效证据，通过学习，学员可以了解系统和服务的主要日志，并能够通过分析获取攻击线索。</p>
+<h2 id="11系统日志分析">1.1系统日志分析</h2>
+<h3 id="111window系统日志与分析方法">1.1.1window系统日志与分析方法</h3>
+<p>前提:开启审核策略，若日后系统出现故障、安全事故则可以查看系统的日志文件、排除故障，追查入侵者的信息等。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/img_convert/c150661356f04eb1ff85c7f2892cfea6.png"
+        data-srcset="https://img-blog.csdnimg.cn/img_convert/c150661356f04eb1ff85c7f2892cfea6.png, https://img-blog.csdnimg.cn/img_convert/c150661356f04eb1ff85c7f2892cfea6.png 1.5x, https://img-blog.csdnimg.cn/img_convert/c150661356f04eb1ff85c7f2892cfea6.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/img_convert/c150661356f04eb1ff85c7f2892cfea6.png"
+        title="c150661356f04eb1ff85c7f2892cfea6.png" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/img_convert/406339bdcc999151b8093097d1906d92.png"
+        data-srcset="https://img-blog.csdnimg.cn/img_convert/406339bdcc999151b8093097d1906d92.png, https://img-blog.csdnimg.cn/img_convert/406339bdcc999151b8093097d1906d92.png 1.5x, https://img-blog.csdnimg.cn/img_convert/406339bdcc999151b8093097d1906d92.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/img_convert/406339bdcc999151b8093097d1906d92.png"
+        title="406339bdcc999151b8093097d1906d92.png" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/img_convert/02cee60d0ee037f6c84c0219e83ddfbe.png"
+        data-srcset="https://img-blog.csdnimg.cn/img_convert/02cee60d0ee037f6c84c0219e83ddfbe.png, https://img-blog.csdnimg.cn/img_convert/02cee60d0ee037f6c84c0219e83ddfbe.png 1.5x, https://img-blog.csdnimg.cn/img_convert/02cee60d0ee037f6c84c0219e83ddfbe.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/img_convert/02cee60d0ee037f6c84c0219e83ddfbe.png"
+        title="02cee60d0ee037f6c84c0219e83ddfbe.png" /></p>
+<p>快捷        Win+R打开运行 → 输入 gpedit.msc 回车 → 计算机配置 → Windows 设置 → 安全设置 → 本地策略 → 审核策略。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/3d144faeedfc418e81df439d0077be7f.png"
+        data-srcset="https://img-blog.csdnimg.cn/3d144faeedfc418e81df439d0077be7f.png, https://img-blog.csdnimg.cn/3d144faeedfc418e81df439d0077be7f.png 1.5x, https://img-blog.csdnimg.cn/3d144faeedfc418e81df439d0077be7f.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/3d144faeedfc418e81df439d0077be7f.png"
+        title="(C:\Users\ZHAI\AppData\Roaming\Typora\typora-user-images\image-20220721194234173.png)]" /></p>
+<p>查看日志</p>
+<p>Win+R打开运行，输入“eventvwr.msc”，回车运行，打开“事件查看器”。</p>
+<pre><code>![在这里插入图片描述](https://img-blog.csdnimg.cn/7646d596b6c444a5a9ec5af32dfebcb3.png)
+</code></pre>
+<p>筛选查看</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/20200218160244385.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1MDg5NTcw,size_16,color_FFFFFF,t_70"
+        data-srcset="https://img-blog.csdnimg.cn/20200218160244385.png?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1MDg5NTcw%2csize_16%2ccolor_FFFFFF%2ct_70, https://img-blog.csdnimg.cn/20200218160244385.png?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1MDg5NTcw%2csize_16%2ccolor_FFFFFF%2ct_70 1.5x, https://img-blog.csdnimg.cn/20200218160244385.png?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1MDg5NTcw%2csize_16%2ccolor_FFFFFF%2ct_70 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/20200218160244385.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1MDg5NTcw,size_16,color_FFFFFF,t_70"
+        title="在这里插入图片描述" /></p>
+<p><strong>系统日志</strong>：记录操作系统组件产生的事件，主要包括驱动程序、系统组件和应用软件的崩溃以及数据丢失错误等。默认存放路径：%SystemRoot%\System32\Winevt\Logs\System.evtx</p>
+<p><strong>安全日志</strong>：记录系统的安全审计事件，包含各种类型的登录日志、对象访问日志、进程追踪日志、特权使用、帐号管理、策略变更、系统事件。这个日志一般是安全工程师重点关注对象。</p>
+<p>默认存放路径：%SystemRoot%\System32\Winevt\Logs\Security.evtx</p>
+<p><strong>应用程序日志</strong>：</p>
+<p>包含由应用程序或系统程序记录的事件，主要记录程序运行方面的事件，
+默认存放路径：%SystemRoot%\System32\Winevt\Logs\Application.evtx。</p>
+<p>对于Windows事件日志分析，不同的EVENT ID代表了不同的意义，摘录一些常见的安全事件的说明</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">4624  --登录成功   
+</span></span><span class="line"><span class="cl">4625  --登录失败  
+</span></span><span class="line"><span class="cl">4634 -- 注销成功
+</span></span><span class="line"><span class="cl">4647 -- 用户启动的注销   
+</span></span><span class="line"><span class="cl">4672 -- 使用超级用户（如管理员）进行登录
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><em>分析工具</em></p>
+<p>Log Parser（是微软公司出品的日志分析工具，它功能强大，使用简单，可以分析基于文本的日志文件、XML 文件、CSV（逗号分隔符）文件，以及操作系统的事件日志、注册表、文件系统、Active Directory。它可以像使用 SQL 语句一样查询分析这些数据，甚至可以把分析结果以各种图表的形式展现出来。</p>
+<p>Log Parser 2.2下载地址：https://www.microsoft.com/en-us/download/details.aspx?id=24659</p>
+<p>Log Parser 使用示例：https://mlichtenberg.wordpress.com/2011/02/03/log-parser-rocks-more-than-50-examples/查看日志的重点</p>
+<p><strong>分析重点</strong>：</p>
+<p>①查看登录日志中暴力破解痕迹；</p>
+<p>②查看账号管理日志中账号的新增、修改痕迹；</p>
+<p>③查看远程桌面登录日志中的登录痕迹。</p>
+<p><strong>暴力破解账密日志</strong></p>
+<p>攻击者通过暴力破解的方式入侵系统，不论是否成功，在日志中会留下入侵痕迹，所以事件id为4624和4625的事件是首当其冲的关注点。需要留意日志中的SubjectUserNameIpAddress。</p>
+<p><strong>入侵事件</strong></p>
+<p>发现连续三条日志，由登录失败到成功，WorkstationName均来自名为kali的主机，并且最终记录下kali的IP地址为192.168.74.129。这个过程可以判断攻击者通过192.168.74.129的主机暴力破解成功administrator的密码，此处即为暴破留下的痕迹</p>
+<p><strong>账号管理日志</strong></p>
+<p>Windows中日志中与账号创建有关的事件ID：4720, 4722, 4724,4738。攻击者攻陷一台Windows主机后，可能会创建后门账号、隐藏账号</p>
+<p><strong>远程桌面登录日志</strong></p>
+<p>上述的安全日志很可能被覆盖掉，为尽量不遗漏入侵痕迹，可进一步查看远程桌面的登录日志。攻击者建立后门账号后会通过远程桌面连接到失陷主机上，此时的登录行为会记录到远程桌面日志。</p>
+<p>远程连接日志（应用程序和服务日志-&gt;Microsoft-&gt;Windows-&gt;-TerminalServices-&gt;RemoteConnectionManager-&gt;Operational），重要事件 ID 和含义：</p>
+<p>1149：用户认证成功</p>
+<p>21：远程桌面服务：会话登录成功</p>
+<p>24：远程桌面服务：会话已断开连接</p>
+<p>25：远程桌面服务：会话重新连接成功</p>
+<p>因此我们可以看看应用程序日志里事件id为1149：</p>
+<h3 id="112linux-系统日志与分析方法">1.1.2linux 系统日志与分析方法</h3>
+<p>Linux系统拥有非常灵活和强大的日志功能，可以保存几乎所有的操作记录，并可以从中检索出我们需要的信息。</p>
+<p>大部分Linux发行版默认的日志守护进程为 syslog，位于 /etc/syslog 或 /etc/syslogd 或/etc/rsyslog.d，默认配置文件为 /etc/syslog.conf 或 rsyslog.conf，任何希望生成日志的程序都可以向 syslog 发送信息。</p>
+<p>Linux系统内核和许多程序会产生各种错误信息、警告信息和其他的提示信息，这些信息对管理员了解系统的运行状态是非常有用的，所以应该把它们写到日志文件中去。完成这个过程的程序就是syslog。syslog可以根据日志的类别和优先级将日志保存到不同的文件中。</p>
+<p><em>默认配置下，日志文件通常都保存在“/var/log”目录下。</em></p>
+<p>常见的日志类型，但并不是所有的Linux发行版都包含这些类型</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/64f037eb94dd452caf7ebbece5b0795d.png"
+        data-srcset="https://img-blog.csdnimg.cn/64f037eb94dd452caf7ebbece5b0795d.png, https://img-blog.csdnimg.cn/64f037eb94dd452caf7ebbece5b0795d.png 1.5x, https://img-blog.csdnimg.cn/64f037eb94dd452caf7ebbece5b0795d.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/64f037eb94dd452caf7ebbece5b0795d.png"
+        title="在这里插入图片描述" /></p>
+<p><em>常见的日志优先级:</em>
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/3196edbe18fa4cb99186c291bf830852.png"
+        data-srcset="https://img-blog.csdnimg.cn/3196edbe18fa4cb99186c291bf830852.png, https://img-blog.csdnimg.cn/3196edbe18fa4cb99186c291bf830852.png 1.5x, https://img-blog.csdnimg.cn/3196edbe18fa4cb99186c291bf830852.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/3196edbe18fa4cb99186c291bf830852.png"
+        title="在这里插入图片描述" /></p>
+<p>系统日志是由一个名为syslog的服务管理的，如以下日志文件都是由syslog日志服务驱动的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/var/log/boot.log：录了系统在引导过程中发生的事件，就是Linux系统开机自检过程显示的信息
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/var/log/lastlog ：记录最后一次用户成功登陆的时间、登陆IP等信息
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/var/log/messages ：记录Linux操作系统常见的系统和服务错误信息
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/var/log/secure ：Linux系统安全日志，记录用户和工作组变坏情况、用户登陆认证情况
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/var/log/btmp ：记录Linux登陆失败的用户、时间以及远程IP地址
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/var/log/syslog：只记录警告信息，常常是系统出问题的信息，使用lastlog查看
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/var/log/wtmp：该日志文件永久记录每个用户登录、注销及系统的启动、停机的事件，使用last命令查看
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/var/run/utmp：该日志文件记录有关当前登录的每个用户的信息。如 who、w、users、finger等就需要访问这个文件
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/var/log/syslog 或 /var/log/messages 存储所有的全局系统活动数据，包括开机信息。基于 Debian 的系统如 Ubuntu 在/var/log/syslog 中存储它们，而基于 RedHat 的系统如 RHEL 或 CentOS 则在 /var/log/messages 中存储它们。
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/var/log/auth.log 或 /var/log/secure 存储来自可插拔认证模块(PAM)的日志，包括成功的登录，失败的登录尝试和认证方式。Ubuntu 和 Debian 在 /var/log/auth.log 中存储认证信息，而 RedHat 和 CentOS 则在 /var/log/secure 中存储该信息。
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="12-web日志分析">1.2 web日志分析</h2>
+<p>Web访问日志记录了Web服务器接收处理请求及运行时错误等各种原始信息。通过对WEB日志进行的安全分析，不仅可 以帮助我们定位攻击者，还可以帮助我们还原攻击路径，找到网站存在的安全漏洞并进行修复。</p>
+<h3 id="iis-日志分析方法">iis 日志分析方法</h3>
+<p>与开发阶段不同的，运维阶段不可能让你去调试程序，发现各类问题， 我们只能通过各种系统日志来分析网站的运行状况， 对于部署在IIS上的网站来说，IIS日志提供了最有价值的信息，我们可以通过它来分析网站的响应情况，来判断网站是否有性能问题， 或者存在哪些需要改进的地方</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/f8255ee783a54589b12af7229950ea47.png"
+        data-srcset="https://img-blog.csdnimg.cn/f8255ee783a54589b12af7229950ea47.png, https://img-blog.csdnimg.cn/f8255ee783a54589b12af7229950ea47.png 1.5x, https://img-blog.csdnimg.cn/f8255ee783a54589b12af7229950ea47.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/f8255ee783a54589b12af7229950ea47.png"
+        title="在这里插入图片描述" /></p>
+<p>这里面记录了：</p>
+<ol>
+<li>请求发生在什么时刻，</li>
+<li>哪个客户端IP访问了服务端IP的哪个端口，</li>
+<li>客户端工具是什么类型，什么版本，</li>
+<li>请求的URL以及查询字符串参数是什么，</li>
+<li>请求的方式是GET还是POST，</li>
+<li>请求的处理结果是什么样的：HTTP状态码，以及操作系统底层的状态码，</li>
+<li>请求过程中，客户端上传了多少数据，服务端发送了多少数据，</li>
+<li>请求总共占用服务器多长时间、等等。</li>
+</ol>
+<p>有个叫 <a href="http://www.microsoft.com/en-us/download/details.aspx?id=24659" target="_blank" rel="noopener noreffer "><strong>Log Parser</strong></a> 的工具就可以专门解析IIS日志，我们可以用它来查看日志中的信息。</p>
+<p>建议选择输出格式为 SQL 。
+注意：这里的SQL并不是指SQLSERVER，而是指所有提供ODBC访问接口的数据库。
+我可以使用下面的命令将IIS日志导入到SQLSERVER中（说明：为了不影响页面宽度我将命令文本换行了）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="s2">&#34;C:\Program Files\Log Parser 2.2\logparser.exe&#34;</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="s2">&#34;SELECT  *  FROM  &#39;D:\Temp\u_ex130615.log&#39;  to MyMVC_WebLog&#34;</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="p">:</span><span class="n">IISW3C</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="p">:</span><span class="k">SQL</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="n">oConnString</span><span class="p">:</span><span class="s2">&#34;Driver={SQL Server};server=localhost\sqlexpress;database=MyTestDb;Integrated Security=SSPI&#34;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">-</span><span class="n">createtable</span><span class="p">:</span><span class="k">ON</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>导入完成后，我们就可以用熟悉的SQLSERVER来做各种查询和统计分析了，例如下面的查询：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="n">cip</span><span class="p">,</span><span class="n">csmethod</span><span class="p">,</span><span class="n">sport</span><span class="p">,</span><span class="n">csuristem</span><span class="p">,</span><span class="n">scstatus</span><span class="p">,</span><span class="n">scwin32status</span><span class="p">,</span><span class="n">scbytes</span><span class="p">,</span><span class="n">csbytes</span><span class="p">,</span><span class="n">timetaken</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FROM</span><span class="w"> </span><span class="n">dbo</span><span class="p">.</span><span class="n">MyMVC_WebLog</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><pre><code>![](https://img-blog.csdnimg.cn/421c547a12b34e7a9f68bd1290ae460d.png)
+</code></pre>
+<p>注意：
+IIS日志在将结果导出到SQLSERVER时，字段名中不符合标识符规范的字符将会删除。
+例如：c-ip 会变成 cip， s-port 会变成 sport 。
+IIS日志中记录的时间是UTC时间，而且把日期和时间分开了，导出到SQLSERVER时，会生成二个字段：</p>
+<p>对于一个ASP.NET程序来说，如果抛出一个未捕获<strong>异常</strong>，会记录到IIS日志中（500），</p>
+<p>本文所说的异常可分为四个部分：</p>
+<p>1.（ASP.NET）程序抛出的未捕获异常，导致服务器产生500的响应输出。</p>
+<p>2.404之类的请求资源不存在错误。</p>
+<p>3.大于500的服务器错误，例如：502，503</p>
+<p>4.系统错误或网络传输错误。</p>
+<p>前三类异常可以用下面的查询获得：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">select</span><span class="w"> </span><span class="n">scStatus</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">count</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">timetaken</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="mi">1000</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">sum_timetaken_second</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">from</span><span class="w"> </span><span class="n">MyMVC_WebLog</span><span class="w"> </span><span class="k">with</span><span class="p">(</span><span class="n">nolock</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">scStatus</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">desc</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="apache日志分析">apache日志分析</h3>
+<p>如果apache的安装时采用默认的配置,那么在/logs目录下就会生成两个文件,分别是access_log和error_log</p>
+<h4 id="access_log"><strong>access_log</strong></h4>
+<p>CustomLog &ldquo;| /usr/sbin/rotatelogs /var/log/apache2/%Y_%m_%d_other_vhosts_access.log 86400 480&rdquo; vhost_combined</p>
+<p>通过CustomLog指令,每天一天生成一个独立的日志文件,同时也写了定时器将一周前的日志文件全部清除,这样可以显得更清晰,既可以分离每一天的日志又可以清除一定时间以前的日志通过制,LogFormat定义日志的记录格式</p>
+<p>下面是一条经典的访问记录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">101.226.168.195 - - [17/Oct/2014:16:46:11 +0800] &#34;GET /actkaijiang/3dinfo.html HTTP/1.1&#34; 200 9678 &#34;http://www.yicp.com/actkaijiang/3dinfo.html&#34; &#34;Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1; 360Spider&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>一共是有9项,将他们一一拆开</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">101.226.168.195
+</span></span><span class="line"><span class="cl">-
+</span></span><span class="line"><span class="cl">-
+</span></span><span class="line"><span class="cl">[17/Oct/2014:16:46:11 +0800]
+</span></span><span class="line"><span class="cl">&#34;GET /actkaijiang/3dinfo.html HTTP/1.1&#34;
+</span></span><span class="line"><span class="cl">200
+</span></span><span class="line"><span class="cl">9678
+</span></span><span class="line"><span class="cl">&#34;http://www.yicp.com/actkaijiang/3dinfo.html&#34;
+</span></span><span class="line"><span class="cl">&#34;Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, likeGecko)Chrome/21.0.1180.89Safari/537.1;360Spider&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>(1) 101.226.168.195 这是一个请求到apache服务器的客户端ip,默认的情况下,第一项信息只是远程主机的ip地址,但我们如果需要apache查出主机的名字,可以将 HostnameLookups设置为on,但这种做法是不推荐使用,因为它大大的减缓了服务器.另外这里的ip地址不一定就是客户主机的ip地址,如果 客户端使用了代理服务器,那么这里的ip就是代理服务器的地址,而不是原机.</p>
+<p>(2) <strong>-</strong> 这一项是空白,使用&quot;-&ldquo;来代替,这个位置是用于标注访问者的标示,这个信息是由identd的客户端存在,除非IdentityCheck为on,非则apache是不会去获取该部分的信息(</p>
+<p>(3) <strong>-</strong> 这一项又是为空白,不过这项是用户记录用户HTTP的身份验证,如果某些网站要求用户进行身份雁阵,那么这一项就是记录用户的身份信息</p>
+<p>(4） [17/Oct/2014:16:46:11 +0800] 第四项是记录请求的时间,格式为[day/month/year:hour:minute:second zone],最后的+0800表示服务器所处的时区为东八区</p>
+<p>(5)&ldquo;GET /actkaijiang/3dinfo.html HTTP/1.1&rdquo; 这一项整个记录中最有用的信息,首先,它告诉我们的服务器收到的是一个GET请求,其次,是客户端请求的资源路径,第三,客户端使用的协议时HTTP/1.1,整个格式为&rdquo;%m %U%q %H&quot;,即&quot;请求方法/访问路径/协议&quot;</p>
+<p>(6) 200 这是一个状态码,由服务器端发送回客户端,它告诉我们客户端的请求是否成功,或者是重定向,或者是碰到了什么样的错误,这项值为200，表示服务器已经成 功的响应了客户端的请求,一般来说,这项值以2开头的表示请求成功,以3开头的表示重定向,以4开头的标示客户端存在某些的错误,以5开头的标示服务器端 存在某些错误,
+(9)<strong>9678</strong>这项表示服务器向客户端发送了多少的字节,在日志分析统计的时侯,把这些字节加起来就可以得知服务器在某点时间内总的发送数据量是多少</p>
+<p>(10) <strong>-</strong> <strong><a href="http://www.yicp.com/actkaijiang/3dinfo.html" target="_blank" rel="noopener noreffer ">http://www.yicp.com/actkaijiang/3dinfo.html</a></strong> 表示请求来源</p>
+<p>(11)<strong>&quot;</strong><em><strong>*Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1; 360Spider*</strong></em><strong>&quot;</strong> 这项主要记录客户端的浏览器信息</p>
+<h4 id="error_log"><strong>error_log</strong></h4>
+<p>error_log为错误日志,记录下任何错误的处理请求,它的位置和内容由ErrorLog指令控制,通常服务器出现什么错误,首先对它进行查阅,是一个最重要的日志文件</p>
+<p>tail error_log,随意摘取一个记录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[Fri Dec 10 15:03:59 2010] [error] [client 218.19.140.242] File does not exist: /home/htmlfile/tradedata/favicon.ico
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>同样也是分为几个项</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[Fri Dec 10 15:03:59 2010]
+</span></span><span class="line"><span class="cl">[error]
+</span></span><span class="line"><span class="cl">[client 218.19.140.242]
+</span></span><span class="line"><span class="cl">File does not exist: /home/htmlfile/tradedata/favicon.ico
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>1.[Fri Dec 10 15:03:59 2010] 记录错误发生的时间,注意,它跟我们上面access_log记录的时间格式是不同的</p>
+<ol start="2">
+<li>
+<p>[error] 这一项为错误的级别,根据LogLevel指令来控制错误的类别,上面的404是属于error级别</p>
+</li>
+<li>
+<p>[client 218.19.140.242] 记录客户端的ip地址</p>
+</li>
+<li>
+<p>File does not exist: /home/htmlfile/tradedata/favicon.ico 这一项首先对错误进行了描述,例如客户端访问一个不存在或路径错误的文件,就会给出404的提示错误</p>
+</li>
+</ol>
+<p>了解日志的各种定义后,这里分享一下从网上淘来的一些对日志分析的脚本</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">1.查看apache的进程数
+</span></span><span class="line"><span class="cl">ps -aux | grep httpd | wc -l
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">2.分析日志查看当天的ip连接数
+</span></span><span class="line"><span class="cl">cat default-access_log | grep &#34;10/Dec/2010&#34; | awk &#39;{print $2}&#39; | sort | uniq -c | sort -nr
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">3.查看指定的ip在当天究竟访问了什么url
+</span></span><span class="line"><span class="cl">cat default-access_log | grep &#34;10/Dec/2010&#34; | grep &#34;218.19.140.242&#34; | awk &#39;{print $7}&#39; | sort | uniq -c | sort -nr
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">4.查看当天访问排行前10的url
+</span></span><span class="line"><span class="cl">cat default-access_log | grep &#34;10/Dec/2010&#34; | awk &#39;{print $7}&#39; | sort | uniq -c | sort -nr | head -n 10
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">5.看到指定的ip究竟干了什么
+</span></span><span class="line"><span class="cl">cat default-access_log | grep 218.19.140.242 | awk &#39;{print $1&#34;\t&#34;$8}&#39; | sort | uniq -c | sort -nr | less
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">6.查看访问次数最多的几个分钟(找到热点)
+</span></span><span class="line"><span class="cl">awk &#39;{print $4}&#39; default-access_log |cut -c 14-18|sort|uniq -c|sort -nr|head
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="nginx日志分析">nginx日志分析</h3>
+<p>Nginx是一个高性能的HTTP和反向代理服务器。Nginx access日志记录了web应用的访问记录。大致记录了访问方式（POST/GET）、客户端IP、远程用户、请求时间、请求状态码、访问host地址、请求页面大小、reffer信息、x_forwarded_for地址等等。nginx access日志的格式不是一成不变的，是可以自定义的。Nginx access具体日志格式与在服务器的存储位置可以查看nginx.conf配置文件。Nginx详细记录了每一次web请求。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">log_format  combined  &#39;$remote_addr - $remote_user  [$time_local]  &#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&#39; &#34;$request&#34;  $status  $body_bytes_sent  &#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&#39; &#34;$http_referer&#34;  &#34;$http_user_agent&#34; &#39;;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果nginx位于负载均衡器，squid，nginx反向代理之后，web服务器无法直接获取到客户端真实的IP地址了。  $remote_addr获取反向代理的IP地址。反向代理服务器在转发请求的http头信息中，可以增加X-Forwarded-For信息，用来记录客户端IP地址和客户端请求的服务器地址。
+下面是修改后，生产环境下代理服务器用的日志格式。可以根据需要添加对应的日志参数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">log_format  main  &#39;$remote_addr - $remote_user [$time_local] requesthost:&#34;$http_host&#34;; &#34;$request&#34; requesttime:&#34;$request_time&#34;; &#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&#39;$status $body_bytes_sent &#34;$http_referer&#34; - $request_body&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&#39;&#34;$http_user_agent&#34; &#34;$http_x_forwarded_for&#34;&#39;;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>二：Nginx日志参数详解</p>
+<p>参数注释如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$remote_addr   #与$http_x_forwarded_for 用以记录客户端的ip地址
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$http_x_forwarded_for   #当前端有代理服务器时，设置web节点记录客户端地址的配置，此参数生效的前提是代理服务器也要进行相关的http_x_forwarded_for设置
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$remote_user   #记录客户端用户名称,一般默认为空
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$time_local   #记录访问时间
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$request  #记录请求的URL和HTTP协议
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$status   #记录请求状态
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$body_bytes_sent   #记录发送给客户端文件内容大小
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$http_referer  #记录从哪个页面链接访问过来的
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$http_user_agent   #记录客户端浏览器相关信息
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$request_time   #处理完请求所花时间，以秒为单位
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$http_host   #请求地址，即浏览器中你输入的地址(IP或域名)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$request_body   #记录POST数据
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$request_length   #客户端请求的长度
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$upstream_status  #upstream状态，成功是200
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$upstream_addr #后台upstream的地址，即真正提供服务的主机地址
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">$upstream_response_time    #请求过程中，upstream响应时间
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Nginx日志常用分析命令示范(注：日志的格式不同，awk取的项不同。下面命令针对上面日志格式执行)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">1)总请求数
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">wc -l  access.log |awk &#39;{print $1}&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">2)独立IP数
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">awk &#39;{print $1}&#39; access.log|sort |uniq |wc -l
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">3)每秒客户端请求数 TOP5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">awk &#39;{print $6}&#39; access.log|sort|uniq -c|sort -rn|head -5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">4)访问最频繁IP Top5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">awk &#39;{print $1}&#39; access.log|sort |uniq -c |sort -nr |head -5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">5)访问最频繁的URL TOP5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">awk &#39;{print $7}&#39; access.log|sort |uniq -c |sort -nr |head -5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">6)响应大于5秒的URL TOP5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">awk &#39;{if ($7 &gt; 5){print $6}}&#39; access.log|sort|uniq -c|sort -rn |head -5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">7)HTTP状态码(非200)统计 Top5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">awk &#39;{if ($11 != 200){print $11}}&#39; access.log|sort|uniq -c|sort -rn|head -5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">8)分析请求数大于50000的源IP
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">cat access.log|awk &#39;{print $NF}&#39;|sort |uniq -c |sort -nr|awk &#39;{if ($1 &gt;50000){print $2}}&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="tomcat-日志分析">tomcat 日志分析</h3>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/20200523145319655.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xvdmVzbWFu,size_16,color_FFFFFF,t_70#pic_center"
+        data-srcset="https://img-blog.csdnimg.cn/20200523145319655.PNG?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xvdmVzbWFu%2csize_16%2ccolor_FFFFFF%2ct_70#pic_center, https://img-blog.csdnimg.cn/20200523145319655.PNG?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xvdmVzbWFu%2csize_16%2ccolor_FFFFFF%2ct_70#pic_center 1.5x, https://img-blog.csdnimg.cn/20200523145319655.PNG?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xvdmVzbWFu%2csize_16%2ccolor_FFFFFF%2ct_70#pic_center 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/20200523145319655.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xvdmVzbWFu,size_16,color_FFFFFF,t_70#pic_center"
+        title="在这里插入图片描述" /></p>
+<p>这些日志文件的产生是在tomcat/conf/logging.<a href="https://so.csdn.net/so/search?q=properties&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener noreffer ">properties</a>中配置的</p>
+<p>Tomcat 日志信息分 为 两 类 ：</p>
+<p>一是运行中的日志，它主要 记录 运行的一些信息，尤其是一些异常 错误 日志信息 。
+二是 访问 日志信息，它 记录 的 访问 的 时间 ， IP ， 访问 的 资 料等相 关 信息。</p>
+<h3 id="主流日志分析工具使用">主流日志分析工具使用</h3></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2023-06-06</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://zjczdzs.github.io/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" data-title="日志分析" data-hashtags="信息安全"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://zjczdzs.github.io/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" data-hashtag="信息安全"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://zjczdzs.github.io/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" data-title="日志分析"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://zjczdzs.github.io/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" data-title="日志分析"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://zjczdzs.github.io/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" data-title="日志分析" data-ralateuid="xxxx"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" class="prev" rel="prev" title="Java语言生成算数表达式二叉树"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Java语言生成算数表达式二叉树</a>
+            <a href="/go%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8/" class="next" rel="next" title="Go语言入门学习">Go语言入门学习<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.112.7">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">xxxx</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.5.0/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"search":{"algoliaAppID":"PASDMWALPK","algoliaIndex":"index.zh-cn","algoliaSearchKey":"b42948e51daaa93df92381c8e2ac0f93","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

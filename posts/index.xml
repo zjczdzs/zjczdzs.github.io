@@ -1,15 +1,87 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>所有文章 - Jason Zhai的博客</title>
-        <link>https://example.com/posts/</link>
+        <link>https://zjczdzs.github.io/posts/</link>
         <description>所有文章 | Jason Zhai的博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 05 Jun 2023 20:59:44 &#43;0800</lastBuildDate><atom:link href="https://example.com/posts/" rel="self" type="application/rss+xml" /><item>
-    <title>分布式技术基础</title>
-    <link>https://example.com/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF/</link>
-    <pubDate>Mon, 05 Jun 2023 20:59:44 &#43;0800</pubDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 06 Jun 2023 17:53:05 &#43;0800</lastBuildDate><atom:link href="https://zjczdzs.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>NAST概述</title>
+    <link>https://zjczdzs.github.io/nast%E6%A6%82%E8%BF%B0/</link>
+    <pubDate>Tue, 06 Jun 2023 17:53:05 &#43;0800</pubDate>
     <author>Jason Zhai</author>
-    <guid>https://example.com/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF/</guid>
-    <description><![CDATA[分布式技术学习]]></description>
+    <guid>https://zjczdzs.github.io/nast%E6%A6%82%E8%BF%B0/</guid>
+    <description><![CDATA[go语言开发的纯开源的面向云原生的分布式缓存。]]></description>
+</item>
+<item>
+    <title>C&#43;&#43;实现单链表的基本操作</title>
+    <link>https://zjczdzs.github.io/c-%E5%AE%9E%E7%8E%B0%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/</link>
+    <pubDate>Tue, 06 Jun 2023 17:52:47 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/c-%E5%AE%9E%E7%8E%B0%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/</guid>
+    <description><![CDATA[学习数据结构时的动手操作。]]></description>
+</item>
+<item>
+    <title>IP协议第一章笔记</title>
+    <link>https://zjczdzs.github.io/tcp-ip%E5%8D%8F%E8%AE%AE%E7%AC%AC%E4%B8%80%E7%AB%A0%E7%AC%94%E8%AE%B0/</link>
+    <pubDate>Tue, 06 Jun 2023 17:52:21 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/tcp-ip%E5%8D%8F%E8%AE%AE%E7%AC%AC%E4%B8%80%E7%AB%A0%E7%AC%94%E8%AE%B0/</guid>
+    <description><![CDATA[个人学习笔记]]></description>
+</item>
+<item>
+    <title>Docker入门及安装及基本命令</title>
+    <link>https://zjczdzs.github.io/docker%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E5%8F%8A%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/</link>
+    <pubDate>Tue, 06 Jun 2023 17:51:56 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/docker%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E5%8F%8A%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/</guid>
+    <description><![CDATA[运维之路的第一步。]]></description>
+</item>
+<item>
+    <title>Hdfs高可用与高拓展机制分析</title>
+    <link>https://zjczdzs.github.io/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/</link>
+    <pubDate>Tue, 06 Jun 2023 17:51:18 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/</guid>
+    <description><![CDATA[在字节跳动青训营里对hdfs架构进一步的学习。]]></description>
+</item>
+<item>
+    <title>hdfs分布式文件系统简介与设计原理</title>
+    <link>https://zjczdzs.github.io/hdfs%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/</link>
+    <pubDate>Tue, 06 Jun 2023 17:50:39 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/hdfs%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/</guid>
+    <description><![CDATA[是大数据的核心组件，也是分布式技术的入门。]]></description>
+</item>
+<item>
+    <title>Spark原理及优化</title>
+    <link>https://zjczdzs.github.io/spark%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BC%98%E5%8C%96/</link>
+    <pubDate>Tue, 06 Jun 2023 17:50:12 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/spark%E5%8E%9F%E7%90%86%E5%8F%8A%E4%BC%98%E5%8C%96/</guid>
+    <description><![CDATA[字节跳动青训营里spark原理与改进的学习。]]></description>
+</item>
+<item>
+    <title>同态加密中无符号数比较大小的研究</title>
+    <link>https://zjczdzs.github.io/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86%E4%B8%AD%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B0%E6%AF%94%E8%BE%83%E5%A4%A7%E5%B0%8F%E7%9A%84%E7%A0%94%E7%A9%B6/</link>
+    <pubDate>Tue, 06 Jun 2023 17:49:00 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86%E4%B8%AD%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B0%E6%AF%94%E8%BE%83%E5%A4%A7%E5%B0%8F%E7%9A%84%E7%A0%94%E7%A9%B6/</guid>
+    <description><![CDATA[个人在信息安全作品赛的创新研究。]]></description>
+</item>
+<item>
+    <title>Go语言入门学习</title>
+    <link>https://zjczdzs.github.io/go%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8/</link>
+    <pubDate>Tue, 06 Jun 2023 17:48:25 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/go%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8/</guid>
+    <description><![CDATA[go语言入门教程，精学请看其他篇。]]></description>
+</item>
+<item>
+    <title>日志分析</title>
+    <link>https://zjczdzs.github.io/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/</link>
+    <pubDate>Tue, 06 Jun 2023 17:48:02 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/</guid>
+    <description><![CDATA[个人杂学杂记]]></description>
 </item>
 </channel>
 </rss>

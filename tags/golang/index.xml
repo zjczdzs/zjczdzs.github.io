@@ -1,0 +1,15 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>golang - 标签 - Jason Zhai的博客</title>
+        <link>https://zjczdzs.github.io/tags/golang/</link>
+        <description>golang - 标签 - Jason Zhai的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 06 Jun 2023 17:48:25 &#43;0800</lastBuildDate><atom:link href="https://zjczdzs.github.io/tags/golang/" rel="self" type="application/rss+xml" /><item>
+    <title>Go语言入门学习</title>
+    <link>https://zjczdzs.github.io/go%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8/</link>
+    <pubDate>Tue, 06 Jun 2023 17:48:25 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/go%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8/</guid>
+    <description><![CDATA[go语言入门教程，精学请看其他篇。]]></description>
+</item>
+</channel>
+</rss>

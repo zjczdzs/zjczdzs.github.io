@@ -1,0 +1,15 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>C&#43;&#43;,链表 - 标签 - Jason Zhai的博客</title>
+        <link>https://zjczdzs.github.io/tags/c&#43;&#43;%E9%93%BE%E8%A1%A8/</link>
+        <description>C&#43;&#43;,链表 - 标签 - Jason Zhai的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 06 Jun 2023 17:52:47 &#43;0800</lastBuildDate><atom:link href="https://zjczdzs.github.io/tags/c&#43;&#43;%E9%93%BE%E8%A1%A8/" rel="self" type="application/rss+xml" /><item>
+    <title>C&#43;&#43;实现单链表的基本操作</title>
+    <link>https://zjczdzs.github.io/c-%E5%AE%9E%E7%8E%B0%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/</link>
+    <pubDate>Tue, 06 Jun 2023 17:52:47 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/c-%E5%AE%9E%E7%8E%B0%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/</guid>
+    <description><![CDATA[学习数据结构时的动手操作。]]></description>
+</item>
+</channel>
+</rss>

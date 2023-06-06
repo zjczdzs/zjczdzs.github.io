@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Java语言生成算数表达式二叉树 - Jason Zhai的博客</title><meta name="Description" content="课设选用java实现二叉树，未用引用类型，全部使用递归实现。"><meta property="og:title" content="Java语言生成算数表达式二叉树" />
+<meta property="og:description" content="课设选用java实现二叉树，未用引用类型，全部使用递归实现。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zjczdzs.github.io/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" /><meta property="og:image" content="https://zjczdzs.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-06-06T17:47:33+08:00" />
+<meta property="article:modified_time" content="2023-06-06T17:47:33+08:00" /><meta property="og:site_name" content="LoveIt" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://zjczdzs.github.io/logo.png"/>
+
+<meta name="twitter:title" content="Java语言生成算数表达式二叉树"/>
+<meta name="twitter:description" content="课设选用java实现二叉树，未用引用类型，全部使用递归实现。"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://zjczdzs.github.io/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" /><link rel="prev" href="https://zjczdzs.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF/" /><link rel="next" href="https://zjczdzs.github.io/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Java语言生成算数表达式二叉树",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/zjczdzs.github.io\/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91\/"
+        },"image": ["https:\/\/zjczdzs.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "java,数据结构","wordcount":  4689 ,
+        "url": "https:\/\/zjczdzs.github.io\/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91\/","datePublished": "2023-06-06T17:47:33+08:00","dateModified": "2023-06-06T17:47:33+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": "https:\/\/zjczdzs.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "Jason Zhai"
+            },"description": "课设选用java实现二叉树，未用引用类型，全部使用递归实现。"
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Jason Zhai的博客"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>LoveIt</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/categories/documentation/"> 文档 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/dillonzq/LoveIt" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a><a href="javascript:void(0);" class="menu-item language" title="选择语言">
+                    <i class="fa fa-globe" aria-hidden="true"></i>                      
+                    <select class="language-select" id="language-select-desktop" onchange="location = this.value;"><option value="/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" selected>简体中文</option></select>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Jason Zhai的博客"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>LoveIt</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/categories/documentation/" title="">文档</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/dillonzq/LoveIt" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a><a href="javascript:void(0);" class="menu-item" title="选择语言">
+                    <i class="fa fa-globe fa-fw" aria-hidden="true"></i>
+                    <select class="language-select" onchange="location = this.value;"><option value="/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" selected>简体中文</option></select>
+                </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Java语言生成算数表达式二叉树</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Jason Zhai</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>数据结构</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-06-06">2023-06-06</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 4689 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 10 分钟&nbsp;<span id="/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" class="leancloud_visitors" data-flag-title="Java语言生成算数表达式二叉树">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
+            </div><div class="content" id="content"><p>几个月前数据结构的课设，抽到了一个比较简单的题目。想着用java语言来实现一下（学的时候是C语言版的数据结构）。毕竟在java项目中，万物皆可对象化，一个类型的数据创建为一个对象，其他函数可以来调用对象实例化是非常香的，所以我打算用java语言来完成本次课设。Java语言来写一个数据结构项目是很吃香的，毕竟java作为一个成熟的高级语言，它里面封装好了许多可以直接用的非常简便的函数，甚至还有封装好的数据结构比如“栈”，在java里我只需要Stack<node> stack = new Stack<node>;就可以直接生成的一个栈。
+没想到网上找不到任何能参考的代码。java语言没有指针把我给难倒了，毕竟我所学的数据结构大量用到了指针功能，最终一个多星期还是写出来了，至于指针我调用了大量的递归，导致代码的可读性和执行效率降了一大截。后来了解了可以用引用类来替代指针（属实是当时java没学好）。为了让老师能看懂代码做了流程图来解释代码。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/07d6b1bb182543b5ae079ac694377973.png"
+        data-srcset="https://img-blog.csdnimg.cn/07d6b1bb182543b5ae079ac694377973.png, https://img-blog.csdnimg.cn/07d6b1bb182543b5ae079ac694377973.png 1.5x, https://img-blog.csdnimg.cn/07d6b1bb182543b5ae079ac694377973.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/07d6b1bb182543b5ae079ac694377973.png"
+        title="在这里插入图片描述" />
+具体代码如下</p>
+<ul>
+<li>先创建目录tree</li>
+<li>创建一个名为Node的java.class文件来建立叶子结点的类，里面有三个成员变量，数据域、左孩子、右孩子。并自动生成了所有成员变量的set和get函数。
+Node.java</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">tree</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">public</span> <span class="nx">class</span> <span class="nx">Node</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Object</span> <span class="nx">data</span> <span class="p">=</span> <span class="nx">null</span><span class="p">;</span><span class="c1">//数据
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">Node</span> <span class="nx">left</span><span class="p">;</span><span class="c1">//左节点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">Node</span> <span class="nx">right</span> <span class="p">=</span> <span class="nx">null</span><span class="p">;</span><span class="c1">//右节点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nx">public</span> <span class="nf">Node</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">public</span> <span class="nf">Node</span><span class="p">(</span><span class="nx">Object</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">super</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">this</span><span class="p">.</span><span class="nx">data</span> <span class="p">=</span> <span class="nx">data</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">public</span> <span class="nx">Object</span> <span class="nf">getData</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nx">public</span> <span class="nx">void</span> <span class="nf">setData</span><span class="p">(</span><span class="nx">Object</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">this</span><span class="p">.</span><span class="nx">data</span> <span class="p">=</span> <span class="nx">data</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nx">public</span> <span class="nx">Node</span> <span class="nf">getLeft</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nx">public</span> <span class="nx">void</span> <span class="nf">setLeft</span><span class="p">(</span><span class="nx">Node</span> <span class="nx">left</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">this</span><span class="p">.</span><span class="nx">left</span> <span class="p">=</span> <span class="nx">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nx">public</span> <span class="nx">Node</span> <span class="nf">getRight</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">right</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nx">public</span> <span class="nx">void</span> <span class="nf">setRight</span><span class="p">(</span><span class="nx">Node</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">this</span><span class="p">.</span><span class="nx">right</span> <span class="p">=</span> <span class="nx">right</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>创建二叉树的类，在里面把各种操作都写成了成员方法。
+towtree.java</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span><span class="lnt">208
+</span><span class="lnt">209
+</span><span class="lnt">210
+</span><span class="lnt">211
+</span><span class="lnt">212
+</span><span class="lnt">213
+</span><span class="lnt">214
+</span><span class="lnt">215
+</span><span class="lnt">216
+</span><span class="lnt">217
+</span><span class="lnt">218
+</span><span class="lnt">219
+</span><span class="lnt">220
+</span><span class="lnt">221
+</span><span class="lnt">222
+</span><span class="lnt">223
+</span><span class="lnt">224
+</span><span class="lnt">225
+</span><span class="lnt">226
+</span><span class="lnt">227
+</span><span class="lnt">228
+</span><span class="lnt">229
+</span><span class="lnt">230
+</span><span class="lnt">231
+</span><span class="lnt">232
+</span><span class="lnt">233
+</span><span class="lnt">234
+</span><span class="lnt">235
+</span><span class="lnt">236
+</span><span class="lnt">237
+</span><span class="lnt">238
+</span><span class="lnt">239
+</span><span class="lnt">240
+</span><span class="lnt">241
+</span><span class="lnt">242
+</span><span class="lnt">243
+</span><span class="lnt">244
+</span><span class="lnt">245
+</span><span class="lnt">246
+</span><span class="lnt">247
+</span><span class="lnt">248
+</span><span class="lnt">249
+</span><span class="lnt">250
+</span><span class="lnt">251
+</span><span class="lnt">252
+</span><span class="lnt">253
+</span><span class="lnt">254
+</span><span class="lnt">255
+</span><span class="lnt">256
+</span><span class="lnt">257
+</span><span class="lnt">258
+</span><span class="lnt">259
+</span><span class="lnt">260
+</span><span class="lnt">261
+</span><span class="lnt">262
+</span><span class="lnt">263
+</span><span class="lnt">264
+</span><span class="lnt">265
+</span><span class="lnt">266
+</span><span class="lnt">267
+</span><span class="lnt">268
+</span><span class="lnt">269
+</span><span class="lnt">270
+</span><span class="lnt">271
+</span><span class="lnt">272
+</span><span class="lnt">273
+</span><span class="lnt">274
+</span><span class="lnt">275
+</span><span class="lnt">276
+</span><span class="lnt">277
+</span><span class="lnt">278
+</span><span class="lnt">279
+</span><span class="lnt">280
+</span><span class="lnt">281
+</span><span class="lnt">282
+</span><span class="lnt">283
+</span><span class="lnt">284
+</span><span class="lnt">285
+</span><span class="lnt">286
+</span><span class="lnt">287
+</span><span class="lnt">288
+</span><span class="lnt">289
+</span><span class="lnt">290
+</span><span class="lnt">291
+</span><span class="lnt">292
+</span><span class="lnt">293
+</span><span class="lnt">294
+</span><span class="lnt">295
+</span><span class="lnt">296
+</span><span class="lnt">297
+</span><span class="lnt">298
+</span><span class="lnt">299
+</span><span class="lnt">300
+</span><span class="lnt">301
+</span><span class="lnt">302
+</span><span class="lnt">303
+</span><span class="lnt">304
+</span><span class="lnt">305
+</span><span class="lnt">306
+</span><span class="lnt">307
+</span><span class="lnt">308
+</span><span class="lnt">309
+</span><span class="lnt">310
+</span><span class="lnt">311
+</span><span class="lnt">312
+</span><span class="lnt">313
+</span><span class="lnt">314
+</span><span class="lnt">315
+</span><span class="lnt">316
+</span><span class="lnt">317
+</span><span class="lnt">318
+</span><span class="lnt">319
+</span><span class="lnt">320
+</span><span class="lnt">321
+</span><span class="lnt">322
+</span><span class="lnt">323
+</span><span class="lnt">324
+</span><span class="lnt">325
+</span><span class="lnt">326
+</span><span class="lnt">327
+</span><span class="lnt">328
+</span><span class="lnt">329
+</span><span class="lnt">330
+</span><span class="lnt">331
+</span><span class="lnt">332
+</span><span class="lnt">333
+</span><span class="lnt">334
+</span><span class="lnt">335
+</span><span class="lnt">336
+</span><span class="lnt">337
+</span><span class="lnt">338
+</span><span class="lnt">339
+</span><span class="lnt">340
+</span><span class="lnt">341
+</span><span class="lnt">342
+</span><span class="lnt">343
+</span><span class="lnt">344
+</span><span class="lnt">345
+</span><span class="lnt">346
+</span><span class="lnt">347
+</span><span class="lnt">348
+</span><span class="lnt">349
+</span><span class="lnt">350
+</span><span class="lnt">351
+</span><span class="lnt">352
+</span><span class="lnt">353
+</span><span class="lnt">354
+</span><span class="lnt">355
+</span><span class="lnt">356
+</span><span class="lnt">357
+</span><span class="lnt">358
+</span><span class="lnt">359
+</span><span class="lnt">360
+</span><span class="lnt">361
+</span><span class="lnt">362
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">tree</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">javax.script.*</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.util.Collections</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.util.Stack</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">towtree</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="n">Node</span> <span class="n">root</span><span class="o">;</span><span class="c1">// 根节点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">private</span> <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="o">;</span><span class="c1">// 储存后缀表达式
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;();</span><span class="c1">// 生成树栈
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="n">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;();</span><span class="c1">// 计算结果栈
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * 生成二叉树函数
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * */</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="n">String</span> <span class="n">str</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">String</span><span class="o">[]</span> <span class="n">sarray</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">sarray</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">sarray</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">            <span class="n">root</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">            <span class="n">root</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//            debugcreattree(0,sarray,node);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">creattree</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="n">sarray</span><span class="o">,</span><span class="n">node</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 让根节点等于最后一个节点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">creattree</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">,</span><span class="n">String</span><span class="o">[]</span> <span class="n">str</span><span class="o">,</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">str</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">char</span> <span class="n">ch</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">((</span><span class="n">ch</span> <span class="o">&gt;=</span> <span class="sc">&#39;A&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">ch</span> <span class="o">&lt;=</span> <span class="sc">&#39;Z&#39;</span><span class="o">)||(</span><span class="n">ch</span> <span class="o">&gt;=</span> <span class="sc">&#39;a&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">ch</span> <span class="o">&lt;=</span> <span class="sc">&#39;z&#39;</span><span class="o">)||(</span><span class="n">ch</span> <span class="o">&gt;=</span> <span class="sc">&#39;0&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">ch</span> <span class="o">&lt;=</span> <span class="sc">&#39;9&#39;</span><span class="o">))</span> <span class="o">{</span><span class="c1">// 如果是字母或数字
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getData</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>                                                  <span class="c1">// 进入判断字母或数字语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="n">node</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>                                                         <span class="c1">// 进入赋值语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="n">Node</span> <span class="n">point</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>                                                   <span class="c1">// 进入出栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="k">if</span> <span class="o">(</span><span class="n">point</span><span class="o">.</span><span class="na">getRight</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>                                           <span class="c1">// 进入右子树不存在并初始化右子树语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="n">Node</span> <span class="n">node1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">point</span><span class="o">.</span><span class="na">setRight</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">point</span><span class="o">);</span>                                                      <span class="c1">// 进入入栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">creattree</span><span class="o">(</span><span class="n">j</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">point</span><span class="o">.</span><span class="na">getRight</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">else</span> <span class="o">{</span>                                                                      <span class="c1">// 进入右子树存在出栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">point</span><span class="o">);</span>                                                       <span class="c1">// 进入入栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">Node</span> <span class="n">pop</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>                                              <span class="c1">// pop进入出栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                        <span class="k">if</span> <span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span><span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">Node</span> <span class="n">top</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>                                              <span class="c1">// top进入出栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                        <span class="k">if</span> <span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getRight</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>                                        <span class="c1">// 进入右子树为空语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                            <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getLeft</span><span class="o">().</span><span class="na">getData</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>                         <span class="c1">// 顶栈左子树未赋值并赋值pop语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                                <span class="n">top</span><span class="o">.</span><span class="na">setLeft</span><span class="o">(</span><span class="n">pop</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">top</span><span class="o">);</span>                                             <span class="c1">// top进入入栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                                <span class="n">creattree</span><span class="o">(</span><span class="n">j</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">top</span><span class="o">.</span><span class="na">getLeft</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">                                <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                            <span class="n">creattree</span><span class="o">(</span><span class="n">j</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">top</span><span class="o">.</span><span class="na">getRight</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getRight</span><span class="o">().</span><span class="na">getData</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getLeft</span><span class="o">().</span><span class="na">getData</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>                         <span class="c1">// 进入顶栈左子树未赋值并赋值pop语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                                <span class="n">top</span><span class="o">.</span><span class="na">setLeft</span><span class="o">(</span><span class="n">pop</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">top</span><span class="o">);</span>                                             <span class="c1">// top进入入栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                                <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                                <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">creattree</span><span class="o">(</span><span class="n">j</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">top</span><span class="o">.</span><span class="na">getRight</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">                                <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>                                                         <span class="c1">// 进入顶栈右子树存在未赋值并赋值pop语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                                <span class="n">top</span><span class="o">.</span><span class="na">setRight</span><span class="o">(</span><span class="n">pop</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">top</span><span class="o">);</span>                                             <span class="c1">// top进入入栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span><span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>                                                                            <span class="c1">// 如果是运算符
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">node</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">root</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Node</span> <span class="n">node1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">node</span><span class="o">.</span><span class="na">setLeft</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>                                                            <span class="c1">// 进入入栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="n">creattree</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">node</span><span class="o">.</span><span class="na">getLeft</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Node</span> <span class="n">point</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>                                                    <span class="c1">// 进入出栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="k">if</span> <span class="o">(</span><span class="n">point</span><span class="o">.</span><span class="na">getRight</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Node</span> <span class="n">node1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">point</span><span class="o">.</span><span class="na">setRight</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">point</span><span class="o">);</span>                                                       <span class="c1">// 进入入栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">point</span><span class="o">);</span>                                                       <span class="c1">// 进入入栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Node</span> <span class="n">node1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">node1</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Node</span> <span class="n">node2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">node1</span><span class="o">.</span><span class="na">setLeft</span><span class="o">(</span><span class="n">node2</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>                                                           <span class="c1">// 进入入栈语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="n">creattree</span><span class="o">(</span><span class="n">j</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">node1</span><span class="o">.</span><span class="na">getLeft</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * 调试生成二叉树函数
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * */</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debugcreattree</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">,</span><span class="n">String</span><span class="o">[]</span> <span class="n">str</span><span class="o">,</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">str</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">char</span> <span class="n">ch</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">((</span><span class="n">ch</span> <span class="o">&gt;=</span> <span class="sc">&#39;A&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">ch</span> <span class="o">&lt;=</span> <span class="sc">&#39;Z&#39;</span><span class="o">)||(</span><span class="n">ch</span> <span class="o">&gt;=</span> <span class="sc">&#39;a&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">ch</span> <span class="o">&lt;=</span> <span class="sc">&#39;z&#39;</span><span class="o">)||(</span><span class="n">ch</span> <span class="o">&gt;=</span> <span class="sc">&#39;0&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">ch</span> <span class="o">&lt;=</span> <span class="sc">&#39;9&#39;</span><span class="o">))</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getData</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">node</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">key</span><span class="o">+</span><span class="s">&#34;进入赋值语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Node</span> <span class="n">point</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">point</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;进入出栈语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="o">(</span><span class="n">point</span><span class="o">.</span><span class="na">getRight</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">point</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;进入右子树不存在并初始化右子树语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Node</span> <span class="n">node1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">point</span><span class="o">.</span><span class="na">setRight</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">point</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">point</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;进入入栈语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">debugcreattree</span><span class="o">(</span><span class="n">j</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">point</span><span class="o">.</span><span class="na">getRight</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">point</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">Node</span> <span class="n">pop</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">pop</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;出栈&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span><span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">Node</span> <span class="n">top</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;出栈&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;pop=&#34;</span><span class="o">+</span><span class="n">pop</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;top=&#34;</span><span class="o">+</span><span class="n">top</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;top.getRight = &#34;</span> <span class="o">+</span> <span class="n">top</span><span class="o">.</span><span class="na">getRight</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getRight</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;进入右子树不存在并初始化右子树语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                            <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getLeft</span><span class="o">().</span><span class="na">getData</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">key</span><span class="o">+</span><span class="s">&#34;进入顶栈左子树未赋值并赋值pop语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">top</span><span class="o">.</span><span class="na">setLeft</span><span class="o">(</span><span class="n">pop</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">top</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;入栈&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">debugcreattree</span><span class="o">(</span><span class="n">j</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">top</span><span class="o">.</span><span class="na">getLeft</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">                                <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                            <span class="n">debugcreattree</span><span class="o">(</span><span class="n">j</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">top</span><span class="o">.</span><span class="na">getRight</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getRight</span><span class="o">().</span><span class="na">getData</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getLeft</span><span class="o">().</span><span class="na">getData</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">key</span><span class="o">+</span><span class="s">&#34;进入顶栈左子树未赋值并赋值pop语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">top</span><span class="o">.</span><span class="na">setLeft</span><span class="o">(</span><span class="n">pop</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">top</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;入栈&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                                <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">debugcreattree</span><span class="o">(</span><span class="n">j</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">top</span><span class="o">.</span><span class="na">getRight</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">                                <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">key</span><span class="o">+</span><span class="s">&#34;进入顶栈右子树存在未赋值并赋值pop语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">top</span><span class="o">.</span><span class="na">setRight</span><span class="o">(</span><span class="n">pop</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">top</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">top</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;入栈&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span><span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span><span class="c1">//如果是运算符
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">node</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">root</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Node</span> <span class="n">node1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">node</span><span class="o">.</span><span class="na">setLeft</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">key</span><span class="o">+</span><span class="s">&#34;进入入栈语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">debugcreattree</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">node</span><span class="o">.</span><span class="na">getLeft</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Node</span> <span class="n">point</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">point</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;进入出栈语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="o">(</span><span class="n">point</span><span class="o">.</span><span class="na">getRight</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">point</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;进入右子树不存在并初始化右子树语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Node</span> <span class="n">node1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">point</span><span class="o">.</span><span class="na">setRight</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">point</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">point</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;进入入栈语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">point</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">point</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;进入入栈语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Node</span> <span class="n">node1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">node1</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">list</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">key</span><span class="o">+</span><span class="s">&#34;进入入栈语句&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Node</span> <span class="n">node2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">node1</span><span class="o">.</span><span class="na">setLeft</span><span class="o">(</span><span class="n">node2</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">debugcreattree</span><span class="o">(</span><span class="n">j</span><span class="o">,</span><span class="n">str</span><span class="o">,</span><span class="n">node1</span><span class="o">.</span><span class="na">getLeft</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * 递归   中序遍历
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">output</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;请先执行步骤1&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span> <span class="n">output</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">output</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getLeft</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&#34;(&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getLeft</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getData</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getRight</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getRight</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&#34;)&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * 查找元素并赋值
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * */</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">assign</span><span class="o">(</span><span class="n">String</span> <span class="n">v</span><span class="o">,</span><span class="n">String</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;请先执行步骤1&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">assign</span><span class="o">(</span><span class="n">v</span><span class="o">,</span><span class="n">c</span><span class="o">,</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;赋值后表达式为：&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">assign</span><span class="o">(</span><span class="n">String</span> <span class="n">v</span><span class="o">,</span><span class="n">String</span> <span class="n">c</span><span class="o">,</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span><span class="c1">// 中序遍历二叉树遇到所寻字母后进行赋值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getLeft</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">assign</span><span class="o">(</span><span class="n">v</span><span class="o">,</span><span class="n">c</span><span class="o">,</span><span class="n">node</span><span class="o">.</span><span class="na">getLeft</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="n">v</span><span class="o">))</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">node</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="n">c</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getRight</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">assign</span><span class="o">(</span><span class="n">v</span><span class="o">,</span><span class="n">c</span><span class="o">,</span><span class="n">node</span><span class="o">.</span><span class="na">getRight</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * 返回赋值后的后序表达式并计算
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * */</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">backtoresult</span><span class="o">(){</span>
+</span></span><span class="line"><span class="cl">        <span class="n">backtoresult</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">result</span> <span class="o">==</span> <span class="s">&#34;&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;请先执行步骤1&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">result</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">char</span> <span class="n">key</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="o">(</span><span class="n">key</span> <span class="o">&gt;=</span> <span class="sc">&#39;0&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">key</span> <span class="o">&lt;=</span> <span class="sc">&#39;9&#39;</span><span class="o">)</span><span class="c1">// 如果是数字就入栈
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">Double</span><span class="o">.</span><span class="na">parseDouble</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">key</span><span class="o">)));</span>
+</span></span><span class="line"><span class="cl">                <span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="o">(</span><span class="n">stack</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">)</span> <span class="o">{</span><span class="c1">// 如果是运算符就取两个顶栈元素进行计算并把结果入栈
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                        <span class="n">Double</span> <span class="n">pop</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">Double</span> <span class="n">top</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span><span class="c1">// 注意这里左边是top,右边是pop如-91=&gt;91-左边是9-右边1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                        <span class="n">Double</span> <span class="n">s</span> <span class="o">=</span>  <span class="n">jisuan</span><span class="o">(</span><span class="n">top</span><span class="o">,</span><span class="n">pop</span><span class="o">,</span><span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">key</span><span class="o">));</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Double</span> <span class="n">jisuan</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">jisuan</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">result</span> <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * 构造出后缀表达式result
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * */</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">backtoresult</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getLeft</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">backtoresult</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getLeft</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getRight</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">backtoresult</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">getRight</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">char</span> <span class="n">ch</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">((</span><span class="n">ch</span> <span class="o">&gt;=</span> <span class="sc">&#39;A&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">ch</span> <span class="o">&lt;=</span> <span class="sc">&#39;Z&#39;</span><span class="o">)||(</span><span class="n">ch</span> <span class="o">&gt;=</span> <span class="sc">&#39;a&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">ch</span> <span class="o">&lt;=</span> <span class="sc">&#39;z&#39;</span><span class="o">)){</span>
+</span></span><span class="line"><span class="cl">            <span class="n">result</span> <span class="o">+=</span> <span class="sc">&#39;0&#39;</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span> <span class="k">else</span> <span class="n">result</span> <span class="o">+=</span> <span class="n">node</span><span class="o">.</span><span class="na">getData</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * 计算函数
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * */</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">jisuan</span><span class="o">(</span><span class="kt">double</span> <span class="n">a</span><span class="o">,</span> <span class="kt">double</span> <span class="n">b</span><span class="o">,</span> <span class="n">String</span> <span class="n">f</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">switch</span> <span class="o">(</span><span class="n">f</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">case</span> <span class="s">&#34;*&#34;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">case</span> <span class="s">&#34;/&#34;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="o">(</span><span class="n">b</span><span class="o">==</span><span class="mi">0</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;除数为0异常返回计算值0，计算值可能出现错误&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">else</span> <span class="k">return</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">case</span> <span class="s">&#34;+&#34;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">case</span> <span class="s">&#34;-&#34;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">case</span> <span class="s">&#34;^&#34;</span><span class="o">:</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">sum</span> <span class="o">*=</span> <span class="n">a</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">sum</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * 拼接表达式函数
+</span></span></span><span class="line"><span class="cl"><span class="cm">    * */</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">compound</span> <span class="o">(</span><span class="n">String</span> <span class="n">p</span><span class="o">,</span><span class="n">String</span> <span class="n">e1</span><span class="o">,</span><span class="n">String</span> <span class="n">e2</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Node</span> <span class="n">newroot</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">newroot</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Node</span> <span class="n">left</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Node</span> <span class="n">right</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Node</span> <span class="n">node1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Node</span> <span class="n">node2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">String</span><span class="o">[]</span> <span class="n">sarray1</span> <span class="o">=</span> <span class="n">e1</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">String</span><span class="o">[]</span> <span class="n">sarray2</span> <span class="o">=</span> <span class="n">e2</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">root</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">creattree</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="n">sarray1</span><span class="o">,</span><span class="n">node1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">left</span> <span class="o">=</span> <span class="n">root</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">newroot</span><span class="o">.</span><span class="na">setLeft</span><span class="o">(</span><span class="n">left</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">root</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">creattree</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="n">sarray2</span><span class="o">,</span><span class="n">node2</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">right</span> <span class="o">=</span> <span class="n">root</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">newroot</span><span class="o">.</span><span class="na">setRight</span><span class="o">(</span><span class="n">right</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">output</span><span class="o">(</span><span class="n">newroot</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>建一个主类来实现菜单页面，并实例化二叉树类，在主方法里调用二叉树类的成员方法来实现各个基本功能。
+twochatree.java</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">tree</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.util.InputMismatchException</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">towchatree</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="n">towtree</span> <span class="n">tt</span> <span class="o">=</span> <span class="k">new</span> <span class="n">towtree</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">chance</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="n">String</span> <span class="n">E</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">ReadExpre</span><span class="o">(</span><span class="n">String</span> <span class="n">exp</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tt</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">exp</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">WriteExpre</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tt</span><span class="o">.</span><span class="na">output</span><span class="o">();;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">Assign</span><span class="o">(</span><span class="n">String</span> <span class="n">v</span><span class="o">,</span><span class="n">String</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tt</span><span class="o">.</span><span class="na">assign</span><span class="o">(</span><span class="n">v</span><span class="o">,</span><span class="n">c</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">Value</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tt</span><span class="o">.</span><span class="na">backtoresult</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">CompoundExpr</span><span class="o">(</span><span class="n">String</span> <span class="n">p</span><span class="o">,</span><span class="n">String</span> <span class="n">e1</span><span class="o">,</span><span class="n">String</span> <span class="n">e2</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tt</span><span class="o">.</span><span class="na">compound</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">String</span> <span class="n">expression</span> <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;算术表达式与二叉树程序 请选择你要进行的操作&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;以字符序列的形式输入语法正确的前缀表达式并构造表达式----1&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;用带括弧的中缀表达式输出表达式----------------------2&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;对某一变量的赋值，变量的初值为0---------------------3&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;对算术表达式求值----------------------------------4&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;构造一个新的复合表达式-----------------------------5&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">try</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Scanner</span> <span class="n">input</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">chance</span> <span class="o">=</span> <span class="n">input</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="o">(</span><span class="n">chance</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">chance</span> <span class="o">&lt;=</span><span class="mi">5</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">else</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;输入超过系统范围，请重新输入！&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InputMismatchException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;非法输入，请重新输入！&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">switch</span> <span class="o">(</span><span class="n">chance</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;输入语法正确的前缀表达式&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Scanner</span> <span class="n">expre</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">expression</span> <span class="o">=</span> <span class="n">expre</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">ReadExpre</span><span class="o">(</span><span class="n">expression</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">WriteExpre</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;请输入要赋值的元素和要赋给的值，未赋值的元素默认值为0&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">String</span> <span class="n">V</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">String</span> <span class="n">c</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Assign</span><span class="o">(</span><span class="n">V</span><span class="o">,</span> <span class="n">c</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Value</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="mi">5</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;请依次输入运算符，表达式1，表达式2&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Scanner</span> <span class="n">com</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">String</span> <span class="n">p</span> <span class="o">=</span> <span class="n">com</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">String</span> <span class="n">e1</span> <span class="o">=</span> <span class="n">com</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">String</span> <span class="n">e2</span> <span class="o">=</span> <span class="n">com</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">CompoundExpr</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;请选择下一步操作&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>勉强用java实现了前缀算数表达式生成二叉树，写的不好望各位见谅。</p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2023-06-06</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://zjczdzs.github.io/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" data-title="Java语言生成算数表达式二叉树" data-hashtags="java,数据结构"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://zjczdzs.github.io/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" data-hashtag="java,数据结构"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://zjczdzs.github.io/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" data-title="Java语言生成算数表达式二叉树"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://zjczdzs.github.io/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" data-title="Java语言生成算数表达式二叉树"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://zjczdzs.github.io/java%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E7%AE%97%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%8C%E5%8F%89%E6%A0%91/" data-title="Java语言生成算数表达式二叉树" data-ralateuid="xxxx"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/java%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">java,数据结构</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF/" class="prev" rel="prev" title="分布式技术基础"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>分布式技术基础</a>
+            <a href="/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" class="next" rel="next" title="日志分析">日志分析<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.112.7">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">xxxx</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.5.0/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"search":{"algoliaAppID":"PASDMWALPK","algoliaIndex":"index.zh-cn","algoliaSearchKey":"b42948e51daaa93df92381c8e2ac0f93","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

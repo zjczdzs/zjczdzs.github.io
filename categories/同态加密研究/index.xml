@@ -1,0 +1,15 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>同态加密研究 - 分类 - Jason Zhai的博客</title>
+        <link>https://zjczdzs.github.io/categories/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86%E7%A0%94%E7%A9%B6/</link>
+        <description>同态加密研究 - 分类 - Jason Zhai的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 06 Jun 2023 17:49:00 &#43;0800</lastBuildDate><atom:link href="https://zjczdzs.github.io/categories/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86%E7%A0%94%E7%A9%B6/" rel="self" type="application/rss+xml" /><item>
+    <title>同态加密中无符号数比较大小的研究</title>
+    <link>https://zjczdzs.github.io/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86%E4%B8%AD%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B0%E6%AF%94%E8%BE%83%E5%A4%A7%E5%B0%8F%E7%9A%84%E7%A0%94%E7%A9%B6/</link>
+    <pubDate>Tue, 06 Jun 2023 17:49:00 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86%E4%B8%AD%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B0%E6%AF%94%E8%BE%83%E5%A4%A7%E5%B0%8F%E7%9A%84%E7%A0%94%E7%A9%B6/</guid>
+    <description><![CDATA[个人在信息安全作品赛的创新研究。]]></description>
+</item>
+</channel>
+</rss>

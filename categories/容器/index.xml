@@ -1,0 +1,15 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>容器 - 分类 - Jason Zhai的博客</title>
+        <link>https://zjczdzs.github.io/categories/%E5%AE%B9%E5%99%A8/</link>
+        <description>容器 - 分类 - Jason Zhai的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 06 Jun 2023 17:51:56 &#43;0800</lastBuildDate><atom:link href="https://zjczdzs.github.io/categories/%E5%AE%B9%E5%99%A8/" rel="self" type="application/rss+xml" /><item>
+    <title>Docker入门及安装及基本命令</title>
+    <link>https://zjczdzs.github.io/docker%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E5%8F%8A%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/</link>
+    <pubDate>Tue, 06 Jun 2023 17:51:56 &#43;0800</pubDate>
+    <author>Jason Zhai</author>
+    <guid>https://zjczdzs.github.io/docker%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E5%8F%8A%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/</guid>
+    <description><![CDATA[运维之路的第一步。]]></description>
+</item>
+</channel>
+</rss>

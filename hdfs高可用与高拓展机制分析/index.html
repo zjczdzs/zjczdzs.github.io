@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Hdfs高可用与高拓展机制分析 - Jason Zhai的博客</title><meta name="Description" content="在字节跳动青训营里对hdfs架构进一步的学习。"><meta property="og:title" content="Hdfs高可用与高拓展机制分析" />
+<meta property="og:description" content="在字节跳动青训营里对hdfs架构进一步的学习。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zjczdzs.github.io/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" /><meta property="og:image" content="https://zjczdzs.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-06-06T17:51:18+08:00" />
+<meta property="article:modified_time" content="2023-06-06T17:51:18+08:00" /><meta property="og:site_name" content="LoveIt" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://zjczdzs.github.io/logo.png"/>
+
+<meta name="twitter:title" content="Hdfs高可用与高拓展机制分析"/>
+<meta name="twitter:description" content="在字节跳动青训营里对hdfs架构进一步的学习。"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://zjczdzs.github.io/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" /><link rel="prev" href="https://zjczdzs.github.io/hdfs%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/" /><link rel="next" href="https://zjczdzs.github.io/docker%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E5%8F%8A%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Hdfs高可用与高拓展机制分析",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/zjczdzs.github.io\/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90\/"
+        },"image": ["https:\/\/zjczdzs.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "hdfs,大数据","wordcount":  3277 ,
+        "url": "https:\/\/zjczdzs.github.io\/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90\/","datePublished": "2023-06-06T17:51:18+08:00","dateModified": "2023-06-06T17:51:18+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": "https:\/\/zjczdzs.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "Jason Zhai"
+            },"description": "在字节跳动青训营里对hdfs架构进一步的学习。"
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Jason Zhai的博客"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>LoveIt</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/categories/documentation/"> 文档 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/dillonzq/LoveIt" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a><a href="javascript:void(0);" class="menu-item language" title="选择语言">
+                    <i class="fa fa-globe" aria-hidden="true"></i>                      
+                    <select class="language-select" id="language-select-desktop" onchange="location = this.value;"><option value="/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" selected>简体中文</option></select>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Jason Zhai的博客"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>LoveIt</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/categories/documentation/" title="">文档</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/dillonzq/LoveIt" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a><a href="javascript:void(0);" class="menu-item" title="选择语言">
+                    <i class="fa fa-globe fa-fw" aria-hidden="true"></i>
+                    <select class="language-select" onchange="location = this.value;"><option value="/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" selected>简体中文</option></select>
+                </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Hdfs高可用与高拓展机制分析</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Jason Zhai</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>分布式技术</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-06-06">2023-06-06</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 3277 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 7 分钟&nbsp;<span id="/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" class="leancloud_visitors" data-flag-title="Hdfs高可用与高拓展机制分析">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#11高可用的需求">1.1高可用的需求</a></li>
+    <li><a href="#12高可用形式">1.2高可用形式</a></li>
+    <li><a href="#13hdfs-namenode高可用架构">1.3HDFS NameNode高可用架构</a></li>
+    <li><a href="#14理论基础状态机复制和日志">1.4理论基础：状态机复制和日志</a></li>
+    <li><a href="#15namenode状态持久化">1.5NameNode状态持久化</a></li>
+    <li><a href="#16namenode操作日志的生产消费">1.6NameNode操作日志的生产消费</a></li>
+    <li><a href="#17namenode块维护">1.7NameNode块维护</a></li>
+    <li><a href="#18自动主备切换--server">1.8自动主备切换&ndash;server</a></li>
+    <li><a href="#19自动主备切换--client">1.9自动主备切换&ndash;client</a></li>
+    <li><a href="#110bookkeeper架构">1.10BookKeeper架构</a></li>
+    <li><a href="#111quorum机制多副本一致性读写">1.11Quorum机制：多副本一致性读写</a></li>
+    <li><a href="#112bookkeeper-quorum">1.12BookKeeper Quorum</a></li>
+    <li><a href="#113bookkeeper-ensemble">1.13BookKeeper Ensemble</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21单机存储--raid">2.1单机存储&ndash;RAID</a></li>
+    <li><a href="#22raid方案讲解">2.2RAID方案讲解</a></li>
+    <li><a href="#23hdfs多副本">2.3HDFS多副本</a>
+      <ul>
+        <li><a href="#erasure-coding原理">Erasure Coding原理</a></li>
+        <li><a href="#hdfs-erasure-coding">HDFS Erasure Coding</a></li>
+      </ul>
+    </li>
+    <li><a href="#24网络架构">2.4网络架构</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#31常见的scale-out方案">3.1常见的Scale Out方案</a></li>
+    <li><a href="#32社区解决方案--blockpool">3.2社区解决方案  BlockPool</a></li>
+    <li><a href="#33社区解决方案--viewsf">3.3社区解决方案  viewsf</a></li>
+    <li><a href="#34字节跳动的nnproxy">3.4字节跳动的NNProxy</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#41延迟的分布与长尾延迟">4.1延迟的分布与长尾延迟</a></li>
+    <li><a href="#42长尾问题的表现-慢节点">4.2长尾问题的表现-慢节点</a></li>
+    <li><a href="#43超大集群下的数据可靠性">4.3超大集群下的数据可靠性</a></li>
+    <li><a href="#44超大集群的负载均衡和数据迁移">4.4超大集群的负载均衡和数据迁移</a></li>
+    <li><a href="#45数据迁移工具-跨nn迁移">4.5数据迁移工具-跨NN迁移</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="一元数据服务高可用">一、元数据服务高可用</h1>
+<h2 id="11高可用的需求">1.1高可用的需求</h2>
+<p>故障类型：</p>
+<ul>
+<li>软件故障</li>
+<li>硬件故障</li>
+<li>人为故障</li>
+</ul>
+<p>灾难：数据中心级别不可用</p>
+<p>故障不可避免，灾难有时发生</p>
+<p>如果HDFS不可用，业务停止的损失极大，所以高可用就至关重要</p>
+<h2 id="12高可用形式">1.2高可用形式</h2>
+<p>服务高可用有</p>
+<ul>
+<li>热备份：有另一个备份节点，发生故障时可直接切换</li>
+<li>冷备份：将关键性文件切换到另外位置，发生故障时通过备份数据进行恢复。</li>
+</ul>
+<p>故障恢复操作：</p>
+<ul>
+<li>人工切换</li>
+<li>自动切换</li>
+</ul>
+<p>人工的反应、决策时间都更长，高可用需要让系统自动决策。
+HDFS的设计中，采用了中心化的元数据管理节点NameNode。NameNode容易成为故障中的单点(single point of failure)。</p>
+<h2 id="13hdfs-namenode高可用架构">1.3HDFS NameNode高可用架构</h2>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/6836bf880fa14908a744f6e62a762377.png"
+        data-srcset="https://img-blog.csdnimg.cn/6836bf880fa14908a744f6e62a762377.png, https://img-blog.csdnimg.cn/6836bf880fa14908a744f6e62a762377.png 1.5x, https://img-blog.csdnimg.cn/6836bf880fa14908a744f6e62a762377.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/6836bf880fa14908a744f6e62a762377.png"
+        title="在这里插入图片描述" /></p>
+<p>组件介绍：</p>
+<ul>
+<li>ActiveNamenode:主节点，提供服务，生产日志</li>
+<li>StandbyNamenode:备节点，消费日志</li>
+<li>ZooKeeper:为自动选主提供统一协调服务</li>
+<li>BookKeeper:提供日志存储服务</li>
+<li>ZKFC: NameNode探活、触发主备切换</li>
+<li>HA Client:提供了自动切换的客户端</li>
+<li>edit log:操作的日志</li>
+</ul>
+<h2 id="14理论基础状态机复制和日志">1.4理论基础：状态机复制和日志</h2>
+<p>状态机复制是实现容错的常用方法</p>
+<p>组件：状态机以及其副本、变更日志、共识协议</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/4717341c42ff499ca748532d7a509d20.png"
+        data-srcset="https://img-blog.csdnimg.cn/4717341c42ff499ca748532d7a509d20.png, https://img-blog.csdnimg.cn/4717341c42ff499ca748532d7a509d20.png 1.5x, https://img-blog.csdnimg.cn/4717341c42ff499ca748532d7a509d20.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/4717341c42ff499ca748532d7a509d20.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="15namenode状态持久化">1.5NameNode状态持久化</h2>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/db71bcc0f8794751a33fe7afd2467eb9.png"
+        data-srcset="https://img-blog.csdnimg.cn/db71bcc0f8794751a33fe7afd2467eb9.png, https://img-blog.csdnimg.cn/db71bcc0f8794751a33fe7afd2467eb9.png 1.5x, https://img-blog.csdnimg.cn/db71bcc0f8794751a33fe7afd2467eb9.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/db71bcc0f8794751a33fe7afd2467eb9.png"
+        title="在这里插入图片描述" /></p>
+<p>FSImage：是保存文件目录树的日志</p>
+<p>EditLog：是保存对文件操作的日志</p>
+<p>checkpoint机制会合并两者生成一个新的目录树日志
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/0658ba6c17a544859785ceccc15a1924.png"
+        data-srcset="https://img-blog.csdnimg.cn/0658ba6c17a544859785ceccc15a1924.png, https://img-blog.csdnimg.cn/0658ba6c17a544859785ceccc15a1924.png 1.5x, https://img-blog.csdnimg.cn/0658ba6c17a544859785ceccc15a1924.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/0658ba6c17a544859785ceccc15a1924.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="16namenode操作日志的生产消费">1.6NameNode操作日志的生产消费</h2>
+<p>Active生产，Standby (可能有多个)消费</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/f16ab94fd9c24007a115c3cf18d1d4c4.png"
+        data-srcset="https://img-blog.csdnimg.cn/f16ab94fd9c24007a115c3cf18d1d4c4.png, https://img-blog.csdnimg.cn/f16ab94fd9c24007a115c3cf18d1d4c4.png 1.5x, https://img-blog.csdnimg.cn/f16ab94fd9c24007a115c3cf18d1d4c4.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/f16ab94fd9c24007a115c3cf18d1d4c4.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="17namenode块维护">1.7NameNode块维护</h2>
+<p>区别</p>
+<ul>
+<li>Active即接收，也发起变更·</li>
+<li>Standby只接收，不发起变更</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/d06bdb4f59694dc1a658c9502328d9bd.png"
+        data-srcset="https://img-blog.csdnimg.cn/d06bdb4f59694dc1a658c9502328d9bd.png, https://img-blog.csdnimg.cn/d06bdb4f59694dc1a658c9502328d9bd.png 1.5x, https://img-blog.csdnimg.cn/d06bdb4f59694dc1a658c9502328d9bd.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/d06bdb4f59694dc1a658c9502328d9bd.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="18自动主备切换--server">1.8自动主备切换&ndash;server</h2>
+<p>ZKFailoverController：作为外部组件，驱动HDFS NameNode的主备切换</p>
+<p>HA核心机制:Watch</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/612299feb8f2419db791491c1ae0d461.png"
+        data-srcset="https://img-blog.csdnimg.cn/612299feb8f2419db791491c1ae0d461.png, https://img-blog.csdnimg.cn/612299feb8f2419db791491c1ae0d461.png 1.5x, https://img-blog.csdnimg.cn/612299feb8f2419db791491c1ae0d461.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/612299feb8f2419db791491c1ae0d461.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="19自动主备切换--client">1.9自动主备切换&ndash;client</h2>
+<p>核心机制-standbyexception</p>
+<p>client自动处理</p>
+<h2 id="110bookkeeper架构">1.10BookKeeper架构</h2>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/57ad57189ed24a1bbbf0f068e656ceec.png"
+        data-srcset="https://img-blog.csdnimg.cn/57ad57189ed24a1bbbf0f068e656ceec.png, https://img-blog.csdnimg.cn/57ad57189ed24a1bbbf0f068e656ceec.png 1.5x, https://img-blog.csdnimg.cn/57ad57189ed24a1bbbf0f068e656ceec.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/57ad57189ed24a1bbbf0f068e656ceec.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="111quorum机制多副本一致性读写">1.11Quorum机制：多副本一致性读写</h2>
+<p>场景:多副本对象存储，用版本号标识数据新旧</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/4b824c0b2bd344bc9c94a37925a2142b.png"
+        data-srcset="https://img-blog.csdnimg.cn/4b824c0b2bd344bc9c94a37925a2142b.png, https://img-blog.csdnimg.cn/4b824c0b2bd344bc9c94a37925a2142b.png 1.5x, https://img-blog.csdnimg.cn/4b824c0b2bd344bc9c94a37925a2142b.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/4b824c0b2bd344bc9c94a37925a2142b.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="112bookkeeper-quorum">1.12BookKeeper Quorum</h2>
+<p>日志场景:顺序追加、只写</p>
+<p>Write Quorum:写入副本数</p>
+<p>Ack Quorum:响应副本数</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/c6d3aa616b844c6f8897c0f98bfe264b.png"
+        data-srcset="https://img-blog.csdnimg.cn/c6d3aa616b844c6f8897c0f98bfe264b.png, https://img-blog.csdnimg.cn/c6d3aa616b844c6f8897c0f98bfe264b.png 1.5x, https://img-blog.csdnimg.cn/c6d3aa616b844c6f8897c0f98bfe264b.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/c6d3aa616b844c6f8897c0f98bfe264b.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="113bookkeeper-ensemble">1.13BookKeeper Ensemble</h2>
+<p>均衡加载数据</p>
+<p>Round-Robin Load Balancer·</p>
+<ul>
+<li>
+<p>第一轮: 1,2,3</p>
+</li>
+<li>
+<p>第二轮: 2,3,4</p>
+</li>
+<li>
+<p>第三轮: 3,4,1</p>
+</li>
+<li>
+<p>第四轮: 4,1,2</p>
+</li>
+</ul>
+<h1 id="二数据存储高可用">二、数据存储高可用</h1>
+<h2 id="21单机存储--raid">2.1单机存储&ndash;RAID</h2>
+<p>Redundant Array of Independent Disks
+图:提供RAID功能的NAS设备</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/7353f43a9478492691cee97dcbd6b4ad.png"
+        data-srcset="https://img-blog.csdnimg.cn/7353f43a9478492691cee97dcbd6b4ad.png, https://img-blog.csdnimg.cn/7353f43a9478492691cee97dcbd6b4ad.png 1.5x, https://img-blog.csdnimg.cn/7353f43a9478492691cee97dcbd6b4ad.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/7353f43a9478492691cee97dcbd6b4ad.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="22raid方案讲解">2.2RAID方案讲解</h2>
+<p>RAID 0：条带化-把数据按顺序依次分配在每个储存空间里</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/437e78597cbd456e9da5a14a4f72713c.png"
+        data-srcset="https://img-blog.csdnimg.cn/437e78597cbd456e9da5a14a4f72713c.png, https://img-blog.csdnimg.cn/437e78597cbd456e9da5a14a4f72713c.png 1.5x, https://img-blog.csdnimg.cn/437e78597cbd456e9da5a14a4f72713c.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/437e78597cbd456e9da5a14a4f72713c.png"
+        title="在这里插入图片描述" /></p>
+<p>RAID 1: 冗余-把一份数据复制两份存储在每个储存空间里</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/286fc559c53b46cabe3a0a7a59f4c3be.png"
+        data-srcset="https://img-blog.csdnimg.cn/286fc559c53b46cabe3a0a7a59f4c3be.png, https://img-blog.csdnimg.cn/286fc559c53b46cabe3a0a7a59f4c3be.png 1.5x, https://img-blog.csdnimg.cn/286fc559c53b46cabe3a0a7a59f4c3be.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/286fc559c53b46cabe3a0a7a59f4c3be.png"
+        title=" " /></p>
+<p>RAID 3:容错校验</p>
+<p>把数据分成多个“块”，按照一定的容错算法，存放在N+1个硬盘上，实际数据占用的有效空间为N个硬盘的空间总和，而第N+1个硬盘上存储的数据是校验容错信息，当这N+1个硬盘中的其中一个硬盘出现故障时，从其它N个硬盘中的数据也可以恢复原始数据，这样，仅使用这N个硬盘也可以带伤继续工作（如采集和回放素材），当更换一个新硬盘后，系统可以重新恢复完整的校验容错信息。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/64ee0c924d1947b18cebef5307de88cd.png"
+        data-srcset="https://img-blog.csdnimg.cn/64ee0c924d1947b18cebef5307de88cd.png, https://img-blog.csdnimg.cn/64ee0c924d1947b18cebef5307de88cd.png 1.5x, https://img-blog.csdnimg.cn/64ee0c924d1947b18cebef5307de88cd.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/64ee0c924d1947b18cebef5307de88cd.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="23hdfs多副本">2.3HDFS多副本</h2>
+<p>HDFS版本的RAID1多副本
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/36aa4ef6a4d34a97845c5a8e698b608b.png"
+        data-srcset="https://img-blog.csdnimg.cn/36aa4ef6a4d34a97845c5a8e698b608b.png, https://img-blog.csdnimg.cn/36aa4ef6a4d34a97845c5a8e698b608b.png 1.5x, https://img-blog.csdnimg.cn/36aa4ef6a4d34a97845c5a8e698b608b.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/36aa4ef6a4d34a97845c5a8e698b608b.png"
+        title="在这里插入图片描述" /></p>
+<p>优点
+陵与路径简单
+副本修复简单高可用</p>
+<h3 id="erasure-coding原理">Erasure Coding原理</h3>
+<p>HDFS版本的RAID2/3，常用Reed Solomon算法</p>
+<p>算法原理</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/b49ef609275c44809323ba12cdf6b44e.png"
+        data-srcset="https://img-blog.csdnimg.cn/b49ef609275c44809323ba12cdf6b44e.png, https://img-blog.csdnimg.cn/b49ef609275c44809323ba12cdf6b44e.png 1.5x, https://img-blog.csdnimg.cn/b49ef609275c44809323ba12cdf6b44e.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/b49ef609275c44809323ba12cdf6b44e.png"
+        title="在这里插入图片描述" /></p>
+<h3 id="hdfs-erasure-coding">HDFS Erasure Coding</h3>
+<p>HDFS版本的RAID2</p>
+<p>图:直接保存的EC和Stripe(条带化)后保存的EC</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/96acf710671d410a8c514b1313161274.png"
+        data-srcset="https://img-blog.csdnimg.cn/96acf710671d410a8c514b1313161274.png, https://img-blog.csdnimg.cn/96acf710671d410a8c514b1313161274.png 1.5x, https://img-blog.csdnimg.cn/96acf710671d410a8c514b1313161274.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/96acf710671d410a8c514b1313161274.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="24网络架构">2.4网络架构</h2>
+<p>机架(Rack):放服务器的架子。
+TOR(Top of Rack):机架顶部的交换机。
+数据中心(Data Center):集中部署服务器的场所</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/0f216b7dc9c74ca6b107de624decfd8f.png"
+        data-srcset="https://img-blog.csdnimg.cn/0f216b7dc9c74ca6b107de624decfd8f.png, https://img-blog.csdnimg.cn/0f216b7dc9c74ca6b107de624decfd8f.png 1.5x, https://img-blog.csdnimg.cn/0f216b7dc9c74ca6b107de624decfd8f.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/0f216b7dc9c74ca6b107de624decfd8f.png"
+        title="在这里插入图片描述" /></p>
+<p>2.5副本放置策略-机架感知</p>
+<p>一个TOR故障导致整个机架不可用vs
+降低跨rack流量</p>
+<p>trade-off:一个本地、一个远端</p>
+<h1 id="三元数据可拓展性">三、元数据可拓展性</h1>
+<p>HDFS NameNode是个集中式服务，部署在单个机器上，内存和磁盘的容量、CPU的计算力都不能无限扩展。</p>
+<p>拓展方法：</p>
+<ul>
+<li>
+<p>扩容单个服务器的能力</p>
+</li>
+<li>
+<p>部署多个服务器来扩容</p>
+</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/186c540f530345b984d601df2ae8cbce.png"
+        data-srcset="https://img-blog.csdnimg.cn/186c540f530345b984d601df2ae8cbce.png, https://img-blog.csdnimg.cn/186c540f530345b984d601df2ae8cbce.png 1.5x, https://img-blog.csdnimg.cn/186c540f530345b984d601df2ae8cbce.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/186c540f530345b984d601df2ae8cbce.png"
+        title="在这里插入图片描述" /></p>
+<p>挑战：</p>
+<ul>
+<li>名字空间分裂</li>
+<li>DataNode分裂</li>
+<li>目录树结构复杂</li>
+</ul>
+<h2 id="31常见的scale-out方案">3.1常见的Scale Out方案</h2>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/90a6b000bdde4f19a0c79e1d1a369b4f.png"
+        data-srcset="https://img-blog.csdnimg.cn/90a6b000bdde4f19a0c79e1d1a369b4f.png, https://img-blog.csdnimg.cn/90a6b000bdde4f19a0c79e1d1a369b4f.png 1.5x, https://img-blog.csdnimg.cn/90a6b000bdde4f19a0c79e1d1a369b4f.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/90a6b000bdde4f19a0c79e1d1a369b4f.png"
+        title="在这里插入图片描述" /></p>
+<p>图:三种数据路由方式</p>
+<ul>
+<li>服务端侧</li>
+<li>路由层</li>
+<li>客户端侧</li>
+</ul>
+<h2 id="32社区解决方案--blockpool">3.2社区解决方案  BlockPool</h2>
+<p>解决datenode同时服务多组NameNode的问题</p>
+<p>文件服务分层</p>
+<ul>
+<li>Namespace</li>
+<li>Block Storage</li>
+</ul>
+<p>用BlockPool来区分datenode的服务</p>
+<ul>
+<li>数据块存储</li>
+<li>心跳和块上报</li>
+</ul>
+<h2 id="33社区解决方案--viewsf">3.3社区解决方案  viewsf</h2>
+<p>Federation架构:将多个不同集群组合起来，对外表现像一个集群一样。
+图: viewfs通过在client-side的配置，指定不同的目录访问不同的NameNode。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/9ea108ebb055482da8801239fe5481ea.png"
+        data-srcset="https://img-blog.csdnimg.cn/9ea108ebb055482da8801239fe5481ea.png, https://img-blog.csdnimg.cn/9ea108ebb055482da8801239fe5481ea.png 1.5x, https://img-blog.csdnimg.cn/9ea108ebb055482da8801239fe5481ea.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/9ea108ebb055482da8801239fe5481ea.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="34字节跳动的nnproxy">3.4字节跳动的NNProxy</h2>
+<p>NNProxy是ByteDance自研的HDFS代理层，提供了路由服务。</p>
+<p>NNProxy主要实现了路由管理和RPC转发·以及鉴权、限流、查询缓存等额外能力
+图:NNProxy所在系统上下游</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/56bda54be6fd467b91bc4dd491e28867.png"
+        data-srcset="https://img-blog.csdnimg.cn/56bda54be6fd467b91bc4dd491e28867.png, https://img-blog.csdnimg.cn/56bda54be6fd467b91bc4dd491e28867.png 1.5x, https://img-blog.csdnimg.cn/56bda54be6fd467b91bc4dd491e28867.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/56bda54be6fd467b91bc4dd491e28867.png"
+        title="在这里插入图片描述" /></p>
+<p><strong>NNProxy的路由规则保存</strong></p>
+<pre><code>![在这里插入图片描述](https://img-blog.csdnimg.cn/34fc748acbe14e4ea8d50377226dc2f9.png)
+</code></pre>
+<p><strong>NNProxy路由转发实现</strong></p>
+<p>目录树视图</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/34d391b5ba1a432ca4627e987fccfc20.png"
+        data-srcset="https://img-blog.csdnimg.cn/34d391b5ba1a432ca4627e987fccfc20.png, https://img-blog.csdnimg.cn/34d391b5ba1a432ca4627e987fccfc20.png 1.5x, https://img-blog.csdnimg.cn/34d391b5ba1a432ca4627e987fccfc20.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/34d391b5ba1a432ca4627e987fccfc20.png"
+        title="在这里插入图片描述" /></p>
+<h1 id="四存储数据高拓展性">四、存储数据高拓展性</h1>
+<h2 id="41延迟的分布与长尾延迟">4.1延迟的分布与长尾延迟</h2>
+<p>延迟的分布:用百分数来表示访问的延迟的统计特征例如p95延迟为1ms，代表95%的请求延迟要低于1ms,但后5%的请求延迟会大于1ms</p>
+<p>长尾延迟:尾部(p99/p999/p999)的延迟，衡量系统最差的请求的情况。会显著的要差于平均值</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/45f6055d2a954a8e84e5027647177172.png"
+        data-srcset="https://img-blog.csdnimg.cn/45f6055d2a954a8e84e5027647177172.png, https://img-blog.csdnimg.cn/45f6055d2a954a8e84e5027647177172.png 1.5x, https://img-blog.csdnimg.cn/45f6055d2a954a8e84e5027647177172.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/45f6055d2a954a8e84e5027647177172.png"
+        title="在这里插入图片描述" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/64c934c6731140f299674358432efedf.png"
+        data-srcset="https://img-blog.csdnimg.cn/64c934c6731140f299674358432efedf.png, https://img-blog.csdnimg.cn/64c934c6731140f299674358432efedf.png 1.5x, https://img-blog.csdnimg.cn/64c934c6731140f299674358432efedf.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/64c934c6731140f299674358432efedf.png"
+        title="在这里插入图片描述" /></p>
+<p>木桶原理使尾部延迟放大:访问的服务变多，尾部的请求就会越发的慢。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/12f6f56a7b8b45349fb1f48128e00cda.png"
+        data-srcset="https://img-blog.csdnimg.cn/12f6f56a7b8b45349fb1f48128e00cda.png, https://img-blog.csdnimg.cn/12f6f56a7b8b45349fb1f48128e00cda.png 1.5x, https://img-blog.csdnimg.cn/12f6f56a7b8b45349fb1f48128e00cda.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/12f6f56a7b8b45349fb1f48128e00cda.png"
+        title="在这里插入图片描述" /></p>
+<p>尾部延迟放大，整个服务被Backend 6拖累</p>
+<h2 id="42长尾问题的表现-慢节点">4.2长尾问题的表现-慢节点</h2>
+<p>慢节点:读取速度过慢，导致客户端阻塞。</p>
+<p>慢节点的发生难以避免和预测</p>
+<ul>
+<li>共享资源、后台维护活动、请求多级排队、功率限制。</li>
+<li>固定的损耗:机器损坏率</li>
+<li>混沌现象</li>
+</ul>
+<p>离线任务也会遇到长尾问题</p>
+<ul>
+<li>全部任务完成时间取决于最慢的任务什么时候完成。</li>
+<li>集群规模变大，任务的数据量变大。</li>
+<li>只要任何数据块的读取受到长尾影响，整个任务就会因此停滞.</li>
+</ul>
+<p>集群扩大10倍，问题扩大N(&gt;10)倍</p>
+<h2 id="43超大集群下的数据可靠性">4.3超大集群下的数据可靠性</h2>
+<p>条件一:超大集群下，有一部分机器是损坏来不及修理的。</p>
+<p>条件二:副本放置策略完全随机。</p>
+<p>条件三:DN的容量足够大
+推论:必然有部分数据全部副本在损坏的机器上，发生数据丢失。</p>
+<p>解决方法：Copyset</p>
+<p>将DataNode分为若干个Copyset选块在copyset内部选择
+原理:减少了副本放置的组合数，从而降低副本丢失的概率。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/db330ebfdfc54ff8ac01249f2f86bcb9.png"
+        data-srcset="https://img-blog.csdnimg.cn/db330ebfdfc54ff8ac01249f2f86bcb9.png, https://img-blog.csdnimg.cn/db330ebfdfc54ff8ac01249f2f86bcb9.png 1.5x, https://img-blog.csdnimg.cn/db330ebfdfc54ff8ac01249f2f86bcb9.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/db330ebfdfc54ff8ac01249f2f86bcb9.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="44超大集群的负载均衡和数据迁移">4.4超大集群的负载均衡和数据迁移</h2>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/7039807e03f84e63872daf62f1ada03c.png"
+        data-srcset="https://img-blog.csdnimg.cn/7039807e03f84e63872daf62f1ada03c.png, https://img-blog.csdnimg.cn/7039807e03f84e63872daf62f1ada03c.png 1.5x, https://img-blog.csdnimg.cn/7039807e03f84e63872daf62f1ada03c.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/7039807e03f84e63872daf62f1ada03c.png"
+        title="在这里插入图片描述" /></p>
+<p>新加入的DataNode会成为一个数据写入的热点，而老的datenode数据写入量就少了</p>
+<p>数据的不均匀</p>
+<ul>
+<li>节点容量不均匀</li>
+<li>数据新日不均匀</li>
+<li>访问类型不均匀</li>
+</ul>
+<p>资源负载不均匀</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/e9fff67d1da748508aae04dd0f58270d.png"
+        data-srcset="https://img-blog.csdnimg.cn/e9fff67d1da748508aae04dd0f58270d.png, https://img-blog.csdnimg.cn/e9fff67d1da748508aae04dd0f58270d.png 1.5x, https://img-blog.csdnimg.cn/e9fff67d1da748508aae04dd0f58270d.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/e9fff67d1da748508aae04dd0f58270d.png"
+        title="在这里插入图片描述" /></p>
+<p>典型场景</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/01738634e98b4234b8779bd6d13c39c9.png"
+        data-srcset="https://img-blog.csdnimg.cn/01738634e98b4234b8779bd6d13c39c9.png, https://img-blog.csdnimg.cn/01738634e98b4234b8779bd6d13c39c9.png 1.5x, https://img-blog.csdnimg.cn/01738634e98b4234b8779bd6d13c39c9.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/01738634e98b4234b8779bd6d13c39c9.png"
+        title="在这里插入图片描述" /></p>
+<h2 id="45数据迁移工具-跨nn迁移">4.5数据迁移工具-跨NN迁移</h2>
+<p><strong>DistCopy</strong></p>
+<ul>
+<li>基于MapReduce，通过一个个任务，将数据从一个NameNode拷</li>
+<li>贝到另一个 NameNode。</li>
+<li>需要拷贝数据，流量较大，速度较慢。</li>
+</ul>
+<p><strong>FastCopy</strong></p>
+<ul>
+<li>
+<p>开源社区的无需拷贝数据的快速元数据迁移方案√前提条件:新旧集群的DN列表吻合</p>
+</li>
+<li>
+<p>对于元数据，直接复制目录树的结构和块信息。</p>
+</li>
+<li>
+<p>对于数据块，直接要求DataNode从源 BlockPool hardlink 到目标</p>
+<p>BlookPool，没有数据拷贝。</p>
+</li>
+<li>
+<p>hardlink:直接让两个路径指向同一块数据。</p>
+</li>
+</ul>
+<p><strong>balancer</strong></p>
+<p>工具向DataNode 发起迁移命令，平衡各个DataNode的容量。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://img-blog.csdnimg.cn/1abf01f6cc9d4519aff1516a3a26f551.png"
+        data-srcset="https://img-blog.csdnimg.cn/1abf01f6cc9d4519aff1516a3a26f551.png, https://img-blog.csdnimg.cn/1abf01f6cc9d4519aff1516a3a26f551.png 1.5x, https://img-blog.csdnimg.cn/1abf01f6cc9d4519aff1516a3a26f551.png 2x"
+        data-sizes="auto"
+        alt="https://img-blog.csdnimg.cn/1abf01f6cc9d4519aff1516a3a26f551.png"
+        title="在这里插入图片描述" /></p>
+<p>场景</p>
+<ul>
+<li>单机房使用、多机房使用限流措施</li>
+</ul>
+<p>评价标准</p>
+<ul>
+<li>稳定性成本</li>
+<li>可运维性
+eNode。</li>
+<li>需要拷贝数据，流量较大，速度较慢。</li>
+</ul>
+<p><strong>FastCopy</strong></p>
+<ul>
+<li>
+<p>开源社区的无需拷贝数据的快速元数据迁移方案√前提条件:新旧集群的DN列表吻合</p>
+</li>
+<li>
+<p>对于元数据，直接复制目录树的结构和块信息。</p>
+</li>
+<li>
+<p>对于数据块，直接要求DataNode从源 BlockPool hardlink 到目标</p>
+<p>BlookPool，没有数据拷贝。</p>
+</li>
+<li>
+<p>hardlink:直接让两个路径指向同一块数据。</p>
+</li>
+</ul>
+<p><strong>balancer</strong></p>
+<p>工具向DataNode 发起迁移命令，平衡各个DataNode的容量。</p>
+<p>[外链图片转存中&hellip;(img-UrAfd3Lb-1660221746580)]</p>
+<p>场景</p>
+<ul>
+<li>单机房使用、多机房使用限流措施</li>
+</ul>
+<p>评价标准</p>
+<ul>
+<li>稳定性成本</li>
+<li>可运维性</li>
+<li>执行效率</li>
+</ul>
+<p>要实现，一个分布式文件系统要考虑的太多了，毕竟hdfs是个代码量十多万的项目。但是要是想搭建基本框架的人可以参考<a href="http://itm-vm.shidler.hawaii.edu/HDFS/" target="_blank" rel="noopener noreffer ">这个项目</a>
+还有一个用go语言写的<a href="https://github.com/last-saiyan/distributed-fs" target="_blank" rel="noopener noreffer ">简易gfs</a></p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2023-06-06</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://zjczdzs.github.io/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" data-title="Hdfs高可用与高拓展机制分析" data-hashtags="hdfs,大数据"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://zjczdzs.github.io/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" data-hashtag="hdfs,大数据"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://zjczdzs.github.io/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" data-title="Hdfs高可用与高拓展机制分析"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://zjczdzs.github.io/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" data-title="Hdfs高可用与高拓展机制分析"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://zjczdzs.github.io/hdfs%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B8%8E%E9%AB%98%E6%8B%93%E5%B1%95%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" data-title="Hdfs高可用与高拓展机制分析" data-ralateuid="xxxx"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/hdfs%E5%A4%A7%E6%95%B0%E6%8D%AE/">hdfs,大数据</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/hdfs%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/" class="prev" rel="prev" title="hdfs分布式文件系统简介与设计原理"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>hdfs分布式文件系统简介与设计原理</a>
+            <a href="/docker%E5%85%A5%E9%97%A8%E5%8F%8A%E5%AE%89%E8%A3%85%E5%8F%8A%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/" class="next" rel="next" title="Docker入门及安装及基本命令">Docker入门及安装及基本命令<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.112.7">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">xxxx</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.5.0/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"search":{"algoliaAppID":"PASDMWALPK","algoliaIndex":"index.zh-cn","algoliaSearchKey":"b42948e51daaa93df92381c8e2ac0f93","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
